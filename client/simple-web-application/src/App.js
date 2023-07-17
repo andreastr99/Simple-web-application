@@ -6,13 +6,13 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 
-import './App.css';
+import './styles/App.css';
 
 function App() {
   return (
       <BrowserRouter>
         <Routes>
-        <Route path="/" element={ <LoginPage/> } />
+          <Route path="/" element={ <LoginPage/> } />
           <Route path="/home" element={ <HomePage/> } />
           <Route path="/register" element={ <RegisterPage/> } />
         </Routes>

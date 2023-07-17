@@ -1,9 +1,11 @@
+import logo from '../assets/login.png'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default function LoginPage() {
     return (
         <div className="text-center m-5-auto">
+            {/* <img src={logo} className="App-logo" alt="logo" /> */}
             <h2>Sign in</h2>
             <form action="/home">
                 <p>
