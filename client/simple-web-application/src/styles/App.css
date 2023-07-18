@@ -1,3 +1,23 @@
+.bg-color {
+  background: #dde5f4; /* Replace #FF0000 with your desired hex code */
+}
+
+.bg-form{
+  background: #f1f7fe;
+  border-radius: 30px;
+}
+
+.btn-login {
+  background-color: #3e4684;
+  color: white;
+  margin: auto;
+}
+
+.btn-login:hover {
+  opacity: 0.8
+}
+
+
 .App {
   text-align: center;
 }

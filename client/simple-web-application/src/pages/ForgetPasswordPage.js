@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom'
 
 export default function ForgetPasswordPage() {
     return (
-        <div className="text-center m-5-auto">
+        <div>
             <h2>Reset your password</h2>
             <h5>Enter your email address and we will send you a new password</h5>
-            <form action="/login">
+            <form action="/">
                 <p>
-                    <label id="reset_pass_lbl">Email address</label><br/>
-                    <input type="email" name="email" required />
+                    <label htmlFor='email' id="reset_pass_lbl" >Email address</label><br/>
+                    <input type="email" name="email" id='email' required />
                 </p>
                 <p>
                     <button id="sub_btn" type="submit">Send password reset email</button>

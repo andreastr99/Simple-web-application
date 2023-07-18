@@ -5,20 +5,20 @@ import { Link } from 'react-router-dom'
 export default function RegisterPage() {
 
     return (
-        <div className="text-center m-5-auto">
+        <div>
             <h2>Join us</h2>
             <h5>Create your personal account</h5>
             <form action="/home">
                 <p>
-                    <label>Username</label><br/>
-                    <input type="text" name="first_name" required />
+                    <label htmlFor='username'>Username</label><br/>
+                    <input type="text" name="username" required />
                 </p>
                 <p>
-                    <label>Email address</label><br/>
+                    <label htmlFor='email'>Email address</label><br/>
                     <input type="email" name="email" required />
                 </p>
                 <p>
-                    <label>Password</label><br/>
+                    <label htmlFor='password'>Password</label><br/>
                     <input type="password" name="password" requiredc />
                 </p>
                 <p>
