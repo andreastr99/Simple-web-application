@@ -34,9 +34,8 @@ export default function LoginPage() {
 
     return (
         <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-color">
-            <div className="card shadow bg-form">
+            <div className="shadow bg-form">
                 <div className="card-body p-5">
-                    {/* <h2 className="text-center mb-4">Login</h2> */}
                     <div className="text-center mb-4">
                     <img src={login} alt="login"  style={{ width: '150px', height: 'auto', margin: '0 auto' }}className="mr-2" />
                     </div>
@@ -49,8 +48,8 @@ export default function LoginPage() {
                                 <label htmlFor="password" className="form-label">Password:</label>
                                 <input onChange={handleInput} type="password" className="form-control" id="password" name='password' placeholder="Enter password"  required/>
                             </div>
-                            <div className="text-center mb-3">
-                                <button type="submit" className="btn btn-primary  btn-login">Login</button>
+                            <div className="d-grid gap-2">
+                                <button type="submit" className="btn-login">Login</button>
                             </div>
                             <div className="text-center">
                                 <p className="mb-0">Don't have an account? <Link to="/register">Create an account</Link>.</p>
