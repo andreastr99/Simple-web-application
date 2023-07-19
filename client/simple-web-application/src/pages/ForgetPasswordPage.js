@@ -1,24 +1,56 @@
 import React from 'react'
+import { useState } from 'react'
+
 import { Link } from 'react-router-dom'
 
 export default function ForgetPasswordPage() {
+
+    const [email, setEmail] = useState("");
+    
+    const handleInput = (e) =>{
+        setEmail(prev => ({...prev, [e.target.name]: [e.target.value]}))
+    }
+
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        console.log(email)
+    }
+
     return (
-        <div>
-            <h2>Reset your password</h2>
-            <h5>Enter your email address and we will send you a new password</h5>
-            <form action="/">
-                <p>
-                    <label htmlFor='email' id="reset_pass_lbl" >Email address</label><br/>
-                    <input type="email" name="email" id='email' required />
-                </p>
-                <p>
-                    <button id="sub_btn" type="submit">Send password reset email</button>
-                </p>
-            </form>
-            <footer>
-                <p>First time? <Link to="/register">Create an account</Link>.</p>
-                <p><Link to="/">Back to Homepage</Link>.</p>
-            </footer>
-        </div>
+        <section className="vh-100">
+            <div className="mask d-flex align-items-center h-100 gradient-custom-3">
+                <div className="container h-100">
+                    <div className="row d-flex justify-content-center align-items-center h-100">
+                        <div className="col-12 col-md-9 col-lg-7 col-xl-6">
+                            <div className=" border-radius shadow" style={{"background": "#f1f7fe"}}>
+                                <div className="card-body p-5">
+                                    <form action="/" onSubmit={handleSubmit}>
+
+                                    <h2 className='mb-5'>Reset your password</h2>
+                                    <h6 className='mb-2'>Enter your email address and we will send you a link to create a new password</h6>
+
+                                        <div className="form-outline mb-4">
+                                        <input onChange={handleInput} type="email" id="email" name='email' className="form-control form-control-lg" required/>
+                                        <label className="form-label" htmlFor="email">Your Email</label>
+                                        </div>
+
+                                        <div className="d-grid gap-2 mb-5">
+                                            <button type="submit" className="btn-login">Reset Password</button>
+                                        </div>
+
+                                        <div className="mb-2 text-center">
+                                            <p className="mb-0-auto">Don't have an account? <Link to="/register">Create an account</Link>.</p>
+                                            <p className='mb-0-auto'><Link to="/">Back to Homepage</Link>.</p>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     )
 }
