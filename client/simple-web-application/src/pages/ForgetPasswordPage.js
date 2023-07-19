@@ -12,7 +12,7 @@ export default function ForgetPasswordPage() {
     }
 
     const handleSubmit = (e) =>{
-        e.preventDefault();
+        // e.preventDefault();
         console.log(email)
     }
 
@@ -38,9 +38,9 @@ export default function ForgetPasswordPage() {
                                             <button type="submit" className="btn-login">Reset Password</button>
                                         </div>
 
-                                        <div className="mb-2 text-center">
-                                            <p className="mb-0-auto">Don't have an account? <Link to="/register">Create an account</Link>.</p>
-                                            <p className='mb-0-auto'><Link to="/">Back to Homepage</Link>.</p>
+                                        <div className="mb-5 text-center text-muted">
+                                            <p className="mb-0">Don't have an account? <Link to="/register">Create an account</Link>.</p>
+                                            <p className="mb-0">Have already an account? <Link to="/">Login here</Link>.</p>   
                                         </div>
 
                                     </form>

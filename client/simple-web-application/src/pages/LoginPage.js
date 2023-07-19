@@ -42,7 +42,7 @@ export default function LoginPage() {
                     <div className="card-body p-5">
                         <div className="text-center">
                             <img src={login} alt="login"  style={{ width: '140px'}}className="mb-2" />
-                            <h2 class="text-uppercase text-center mb-4">Login</h2>
+                            <h2 className="text-uppercase text-center mb-4">Login</h2>
                         </div>
 
                         <form action="/home" onSubmit={handleSubmit}>
@@ -61,7 +61,7 @@ export default function LoginPage() {
                                 <button type="submit" className="btn-login">Login</button>
                             </div>
 
-                            <div className="mb-5 text-center">
+                            <div className="mb-5 text-center text-muted">
                                 <p className="mb-0">Don't have an account? <Link to="/register">Create an account</Link>.</p>
                                 <p className="mb-0"><Link to="/forget-password">Forgot password?</Link></p>
                             </div>

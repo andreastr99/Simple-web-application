@@ -9,10 +9,6 @@ export default function RegisterPage() {
     password: ''
   });
 
-  //δέχεται ένα event object (πχ e) και καλεί την συνάρτηση setValues
-  //όπου παίρνει το προηγούμενο state ως argument
-  //ενημερώνει το state object με δυναμική ανάθεση καινούργιας τιμής που βασίζεται
-  //στα e.target.name και e.target.value 
   const handleInput = (e) =>{
       setValues(prev => ({...prev, [e.target.name]: [e.target.value]}))
   }
@@ -39,12 +35,12 @@ export default function RegisterPage() {
                             </div>
 
                             <div className="form-outline mb-4">
-                                <input onChange={handleInput} type="password" id="password" name='password' className="form-control form-control-lg"  required/>
+                                <input onChange={handleInput} type="password" id="password" name='password' className="form-control form-control-lg" required/>
                                 <label className="form-label" htmlFor="password">Password</label>
                             </div>
 
                             <div className="form-outline mb-4">
-                              <input type="password" id="form3Example4cdg" className="form-control form-control-lg" />
+                              <input type="password" id="form3Example4cdg" className="form-control form-control-lg" required/>
                               <label className="form-label" htmlFor="form3Example4cdg">Repeat your password</label>
                             </div>
 
@@ -58,8 +54,8 @@ export default function RegisterPage() {
                                 <button type="submit" className="btn-login">Register</button>
                             </div>
 
-                            <div className="mb-5 text-center">                          
-                                <p className='mb-0'><Link to="/">Back to Homepage</Link>.</p>
+                            <div className="mb-5 text-center text-muted">                          
+                                <p className="mb-0">Have already an account? <Link to="/">Login here</Link></p>                              
                             </div>
 
                         </form>
