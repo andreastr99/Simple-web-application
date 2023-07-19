@@ -21,9 +21,9 @@
 
 .gradient-custom-3 {
   background-color:#dde5f4;
-  }
+}
 
-  .background-stripe::before {
+.background-stripe::before {
     content: "";
     position: absolute;
     top: 0;
@@ -31,4 +31,13 @@
     right: 0;
     height: 200px;
     background-color: #3e4684;
-  }
+}
+
+.navbar,
+.navbar-brand,
+.navbar-nav .nav-link{
+  background-color: #3e4684;
+  color: white
+}
+
+

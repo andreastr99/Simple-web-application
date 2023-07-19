@@ -37,23 +37,23 @@ export default function LoginPage() {
         <div className="mask d-flex align-items-center h-100 gradient-custom-3">
             <div className="container h-100">
             <div className="row d-flex justify-content-center align-items-center h-100">
-                <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-                <div className="card border-radius shadow" style={{"background": "#f1f7fe"}}>
-                    <div className="card-body p-5">
+                <div className="col-12 col-md-9 col-lg-7 col-xl-5">
+                <div className="card border-radius shadow" style={{"background": "#f1f7fe", "maxWidth": "450px", "margin": "auto"}}>
+                    <div className="card-body p-4">
                         <div className="text-center">
-                            <img src={login} alt="login"  style={{ width: '140px'}}className="mb-2" />
-                            <h2 className="text-uppercase text-center mb-4">Login</h2>
+                            <img src={login} alt="login"  style={{ width: "120px"}}className="mb-2" />
+                            <h2 className="text-uppercase text-center mb-3">Login</h2>
                         </div>
 
                         <form action="/home" onSubmit={handleSubmit}>
 
                             <div className="form-outline mb-4">
-                                <input onChange={handleInput} type="email" id="email" name='email' className="form-control form-control-lg" required/>
+                                <input onChange={handleInput} type="email" id="email" name="email" className="form-control form-control-lg" required/>
                                 <label className="form-label" htmlFor="email">Your Email</label>
                             </div>
 
                             <div className="form-outline mb-4">
-                                <input onChange={handleInput} type="password" id="password" name='password' className="form-control form-control-lg"  required/>
+                                <input onChange={handleInput} type="password" id="password" name="password" className="form-control form-control-lg"  required/>
                                 <label className="form-label" htmlFor="password">Password</label>
                             </div>
 
