@@ -4,18 +4,36 @@ import { Link } from 'react-router-dom'
 
 
 export default function RegisterPage() {
-  const [values, setValues] = useState({
+  const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    reenterPassword: ''
   });
 
-  const handleInput = (e) =>{
-      setValues(prev => ({...prev, [e.target.name]: [e.target.value]}))
-  }
+  const [passwordMatch, setPasswordMatch] = useState(true);
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({...prevData,[name]: value}));
+
+    if (name === 'password') {
+      setPasswordMatch(value === formData.reenterPassword);
+    } else if (name === 'reenterPassword') {
+      setPasswordMatch(value === formData.password);
+    }
+  };
 
   const handleSubmit = (e) =>{
       e.preventDefault();
-      console.log(values)
+      if (formData.password === formData.reenterPassword) {
+        // Passwords match, perform registration logic
+        console.log('Registration successful');
+        console.log(formData);
+      } else {
+        // Passwords don't match, display an error message or take appropriate action
+        console.log('Passwords do not match');
+        console.log(formData);
+      }
   }
 
     return (
@@ -30,20 +48,23 @@ export default function RegisterPage() {
                         <form action="/home" onSubmit={handleSubmit}>
 
                             <div className="form-outline mb-4">
-                                <input onChange={handleInput} type="email" id="email" name='email' className="form-control form-control-lg" required/>
+                                <input onChange={handleInput} type="email" id="email" name="email" className="form-control form-control-lg" required/>
                                 <label className="form-label" htmlFor="email">Your Email</label>
                             </div>
 
                             <div className="form-outline mb-4">
-                                <input onChange={handleInput} type="password" id="password" name='password' className="form-control form-control-lg" required/>
+                                <input onChange={handleInput} type="password" id="password" name="password" className="form-control form-control-lg" required/>
                                 <label className="form-label" htmlFor="password">Password</label>
                             </div>
 
-                            <div className="form-outline mb-4">
-                              <input type="password" id="form3Example4cdg" className="form-control form-control-lg" required/>
-                              <label className="form-label" htmlFor="form3Example4cdg">Repeat your password</label>
+                            <div className="form-outline mb-1">
+                              <input onChange={handleInput} type="password" id="reenterPassword" name="reenterPassword" className="form-control form-control-lg" required/>
+                              <label className="form-label" htmlFor="reenterPassword">Repeat your password</label>
                             </div>
 
+                            <div className="text-center">
+                              {!passwordMatch && <p style={{"color": "red"}}>Passwords do not match</p>}
+                            </div>
                             <div className="form-check d-flex justify-content-center mb-5">
                               <input className="form-check-input me-2" type="checkbox" value="" id="agreeBox" />
                               <label className="form-check-label" htmlFor="agreeBox">
@@ -68,5 +89,4 @@ export default function RegisterPage() {
         </div>
     </section>
     )
-
 }

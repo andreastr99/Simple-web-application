@@ -8,11 +8,11 @@ export default function ForgetPasswordPage() {
     const [email, setEmail] = useState("");
     
     const handleInput = (e) =>{
-        setEmail(prev => ({...prev, [e.target.name]: [e.target.value]}))
+        setEmail(prevData => ({...prevData, [e.target.name]: [e.target.value]}))
     }
 
     const handleSubmit = (e) =>{
-        // e.preventDefault();
+        e.preventDefault();
         console.log(email)
     }
 

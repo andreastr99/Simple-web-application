@@ -24,7 +24,7 @@ export default function LoginPage() {
     //ενημερώνει το state object με δυναμική ανάθεση καινούργιας τιμής που βασίζεται
     //στα e.target.name και e.target.value 
     const handleInput = (e) =>{
-        setValues(prev => ({...prev, [e.target.name]: [e.target.value]}))
+        setValues(prevData => ({...prevData, [e.target.name]: [e.target.value]}))
     }
 
     const handleSubmit = (e) =>{
