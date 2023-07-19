@@ -33,12 +33,12 @@ export default function LoginPage() {
     }
 
     return (
-    <section className="vh-100">
+    <section className="vh-100 background-stripe">
         <div className="mask d-flex align-items-center h-100 gradient-custom-3">
             <div className="container h-100">
             <div className="row d-flex justify-content-center align-items-center h-100">
                 <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-                <div className=" border-radius shadow" style={{"background": "#f1f7fe"}}>
+                <div className="card border-radius shadow" style={{"background": "#f1f7fe"}}>
                     <div className="card-body p-5">
                         <div className="text-center">
                             <img src={login} alt="login"  style={{ width: '140px'}}className="mb-2" />

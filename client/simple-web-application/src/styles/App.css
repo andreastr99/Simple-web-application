@@ -20,6 +20,15 @@
 }
 
 .gradient-custom-3 {
-  /* fallback for old browsers */
-  background:#dde5f4;
+  background-color:#dde5f4;
+  }
+
+  .background-stripe::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background-color: #3e4684;
   }
