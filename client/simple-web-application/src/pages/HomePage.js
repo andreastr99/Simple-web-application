@@ -1,92 +1,95 @@
-import React from 'react'
+import { React,  useEffect, useState } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import EditModal from './Modal';
+
+
+
 
 export default function HomePage(){
-    return(
-      <div className="dashboard-container">
+  const [data, setData] = useState([]);
+
+  useEffect(() =>{
+    axios.get('http://localhost:8081/api/Employees')
+    .then(res => setData(res.data))
+    .catch(error => console.log(error));
+  }, [])
+  return(
+     <div className="container-fluid">
       <nav className="navbar navbar-expand-lg">
-        <Link to="/home" className="navbar-brand m-2">Dashboard</Link>
-        {/* <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button> */}
+        <h2 className="p-2">Admin Dashboard</h2>
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul className="navbar-nav ml-auto">
+          <ul className="navbar-nav">
             <li className="nav-item">
-              <Link to="/" className="nav-link ,-2">Logout</Link>
+              <Link to="/" className="custom-right-padding btn text-white">Logout</Link>
             </li>
           </ul>
         </div>
       </nav>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-2 sidebar" style={{"background": "#f1f7fe"}}>
+    
+      <div className="row">
+        {/* Vertical Navbar */}
+        <nav className="col-md-3 col-lg-2 d-md-block sidebar">
+          <div className="position-sticky">
             <ul className="nav flex-column">
-              {/* Add your vertical navbar options */}
               <li className="nav-item">
-                <a className="nav-link" href="/">Option 1</a>
+                <a className="nav-link active" href="#option1">Option 1</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/">Option 2</a>
+                <a className="nav-link" href="#option2">Option 2</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/">Option 3</a>
+                <a className="nav-link" href="#option3">aa</a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/">Option 4</a>
-              </li>
-              {/* Add more options as needed */}
             </ul>
           </div>
-          <div className="col-md-10 bg-white">
-            <section className="section-content">
-              {/* Add your main section content */}
-              <h2>User Management</h2>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Date of Birth</th>
-                    <th>Email</th>
-                    <th>Skill level</th>
-                    <th>Active</th>
-                    <th>Age</th>                    
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr  className='mt-5'>
-                    <td>1</td>
-                    <td>John</td>
-                    <td>Doe</td> 
-                    <td>Admin</td>
-                    <td>johndoe@example.com</td>
-                    <td>skill</td>
-                    <td><span class="status text-success">&bull;</span> Active</td>
-                    <td>24</td>
-                    <td>  
-                      <button className="btn btn-primary m-1">Edit</button>
-                      <button className="btn btn-danger">Delete</button>
-                    </td>
-                  </tr>
-                  {/* Add more rows for other users */}
-                </tbody>
-              </table>
-            </section>
+        </nav>
+
+        {/* Users Table */}
+        <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <h2 className="mb-5 mt-3">User Management</h2>
+          <div className="d-flex justify-content-start mb-2">
+            {/* <EditModal to="/" className="btn btn-success">Add Employee +</EditModal> */}
+            {<EditModal/>}
           </div>
-        </div>
+          <div className="table-responsive">
+            <table className="table table-hover">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Date of Birth</th>
+              <th>Email</th>
+              <th>Skill level</th>
+              <th>Active</th>
+              <th>Age</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((employee, index) =>{
+              return <tr key={index}>
+                <td>{employee.employee_id}</td>
+                <td>{employee.first_name}</td>
+                <td>{employee.last_name}</td>
+                <td>{employee.dob}</td>
+                <td>{employee.email}</td>
+                <td>{employee.skill_level}</td>
+                <td>{employee.active}</td>
+                <td>{employee.age}</td>
+                <td>
+                  <button className="btn btn-sm btn-primary mx-2">Edit</button>
+                  <button className="btn btn-sm btn-danger">Delete</button>
+                </td>
+              </tr>
+            })}
+          </tbody>
+            </table>
+          </div>
+        </main>
       </div>
     </div>
-
-    )
+  )
 }
 

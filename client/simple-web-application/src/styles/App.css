@@ -40,4 +40,53 @@
   color: white
 }
 
+.sidebar{
+  min-height: 100vh;
+  background-color: #f1f7fe;
+}
 
+.table{
+  white-space: nowrap;
+  width: auto;
+}
+
+.table thead tr th {
+  background-color: #f1f7fe;
+  color:black;
+}
+
+.table th,
+.table td {
+  padding: 0.8rem;
+}
+
+.label{
+  border-radius: 3px;
+  padding: 0.3rem;
+  color: white;
+}
+
+.label-active{
+  background-color: green;
+}
+
+.label-inactive{
+  background-color: #e10d05;
+}
+
+.actions{
+  display: flex;
+  justify-content: space-around;
+}
+
+.actions svg{
+  cursor: pointer;
+}
+
+.delete-btn{
+  color: #e10d05;
+}
+
+.custom-right-padding{
+  padding-right: 20px;
+}
