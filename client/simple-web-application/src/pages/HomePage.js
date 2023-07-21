@@ -1,16 +1,37 @@
 import { React,  useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import EditModal from './Modal';
+import { Link, useNavigate } from 'react-router-dom'
+import AddModal from './AddModal';
+import EditModal from './EditModal';
 
 
 
 
 export default function HomePage(){
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate("/");
+  };
 
   useEffect(() =>{
-    axios.get('http://localhost:8081/api/Employees')
+    axios.get('http://localhost:8081/api/Employees',{
+      headers:{
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
     .then(res => setData(res.data))
     .catch(error => console.log(error));
   }, [])
@@ -21,7 +42,7 @@ export default function HomePage(){
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link to="/" className="custom-right-padding btn text-white">Logout</Link>
+              <button onClick={handleLogout} className="custom-right-padding btn text-white">Logout</button>
             </li>
           </ul>
         </div>
@@ -49,42 +70,45 @@ export default function HomePage(){
         <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <h2 className="mb-5 mt-3">User Management</h2>
           <div className="d-flex justify-content-start mb-2">
-            {/* <EditModal to="/" className="btn btn-success">Add Employee +</EditModal> */}
-            {<EditModal/>}
+            <button type="button" className="btn btn-success" onClick={handleShowModal}>Add Employee +</button>
+            <AddModal showModal={showModal} handleClose={handleCloseModal} />
           </div>
           <div className="table-responsive">
             <table className="table table-hover">
-            <thead>
-            <tr>
-              <th>ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Date of Birth</th>
-              <th>Email</th>
-              <th>Skill level</th>
-              <th>Active</th>
-              <th>Age</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((employee, index) =>{
-              return <tr key={index}>
-                <td>{employee.employee_id}</td>
-                <td>{employee.first_name}</td>
-                <td>{employee.last_name}</td>
-                <td>{employee.dob}</td>
-                <td>{employee.email}</td>
-                <td>{employee.skill_level}</td>
-                <td>{employee.active}</td>
-                <td>{employee.age}</td>
-                <td>
-                  <button className="btn btn-sm btn-primary mx-2">Edit</button>
-                  <button className="btn btn-sm btn-danger">Delete</button>
-                </td>
-              </tr>
-            })}
-          </tbody>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Date of Birth</th>
+                  <th>Email</th>
+                  <th>Skill level</th>
+                  <th>Active</th>
+                  <th>Age</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((employee, index) =>{
+                  return <tr key={index}>
+                    <td>{employee.employee_id}</td>
+                    <td>{employee.first_name}</td>
+                    <td>{employee.last_name}</td>
+                    <td>{employee.dob}</td>
+                    <td>{employee.email}</td>
+                    <td>{employee.skill_level}</td>
+                    <td>{employee.active}</td>
+                    <td>{employee.age}</td>
+                    <td>
+                      
+                        <button className="btn btn-sm btn-primary mx-2" onClick={handleShowModal}>Edit</button>
+                        {/* <EditModal showModal={showModal} handleClose={handleCloseModal} /> */}
+                      
+                      <button className="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                  </tr>
+                })}
+              </tbody>
             </table>
           </div>
         </main>
@@ -92,4 +116,3 @@ export default function HomePage(){
     </div>
   )
 }
-

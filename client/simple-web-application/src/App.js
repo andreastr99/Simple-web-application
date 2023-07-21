@@ -7,7 +7,6 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ForgetPasswordPage from './pages/ForgetPasswordPage'
-import EditModal  from './pages/Modal'
 
 import './styles/App.css';
 
@@ -16,7 +15,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={ <LoginPage/> } />
-          <Route path="/modal" element={ <EditModal/> } />
           <Route path="/home" element={ <HomePage/> } />
           <Route path="/register" element={ <RegisterPage/> } />
           <Route path="/forget-password" element={ <ForgetPasswordPage/> } />

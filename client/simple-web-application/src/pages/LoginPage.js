@@ -1,7 +1,9 @@
 import React from 'react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios'
+
 
 import login from '../assets/group.png';
 
@@ -9,13 +11,14 @@ import login from '../assets/group.png';
 // Για να πάρουμε ό,τι δίνει ο χρήστης στο email και password
 // input χρησιμοποιούμε το useState hook απο την React
 export default function LoginPage() {
+    const navigate = useNavigate();
     //Αρχικές τιμές το κενό
     //ορίζω ένα variable state που ονομάζεται values και μια συνάρτηση setValues για
     //να ενημερώνει αυτό το state variable.
     //Επιστρέφει έναν πίνακα με δύο στοιχεία και όποτε θέλω να ενημερώσω τις τιμές
     //καλώ την setValue συνάρτηση.
     const [values, setValues] = useState({
-        email: '',
+        username: '',
         password: ''
     });
 
@@ -29,7 +32,22 @@ export default function LoginPage() {
 
     const handleSubmit = (e) =>{
         e.preventDefault();
-        console.log(values)
+        const formattedValues = {
+            username: `${values.username}`,
+            password: `${values.password}`
+          };        
+        axios.post("http://localhost:8081/api/login", formattedValues)
+        .then(res => {
+            if(res.data.token){
+                localStorage.setItem("token", res.data.token);            
+                navigate("/home");
+            }
+        })
+        .catch(err => {
+            if(err.response.status){
+                alert('Invalid credentials')
+            }
+        });
     }
 
     return (
@@ -48,12 +66,12 @@ export default function LoginPage() {
                         <form action="/home" onSubmit={handleSubmit}>
 
                             <div className="form-outline mb-4">
-                                <input onChange={handleInput} type="email" id="email" name="email" className="form-control form-control-lg" required/>
+                                <input onChange={handleInput} type="text" id="username" name="username" value={values.username} className="form-control form-control-lg" required/>
                                 <label className="form-label" htmlFor="email">Your Email</label>
                             </div>
 
                             <div className="form-outline mb-4">
-                                <input onChange={handleInput} type="password" id="password" name="password" className="form-control form-control-lg"  required/>
+                                <input onChange={handleInput} type="password" id="password" name="password"  value={values.password} className="form-control form-control-lg"  required/>
                                 <label className="form-label" htmlFor="password">Password</label>
                             </div>
 
