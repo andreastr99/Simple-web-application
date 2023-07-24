@@ -35,7 +35,8 @@ export default function LoginPage() {
         const formattedValues = {
             username: `${values.username}`,
             password: `${values.password}`
-          };        
+          };
+
         axios.post("http://localhost:8081/api/login", formattedValues)
         .then(res => {
             if(res.data.token){

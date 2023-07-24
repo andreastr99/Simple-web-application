@@ -5,6 +5,7 @@ const bcryptjs = require('bcryptjs');
 const uuid = require('uuid');
 const accessToken  = require('../controllers/user.controller');
 
+const {validation} = require('../helpers/employee.validation')
 
 
 
@@ -22,6 +23,11 @@ function addEmployee (req, res) {
     const {first_name, last_name, dob, email, skill_level, active, age} = req.body;
 
     const employee_id = uuid.v4();
+    if(!validation(req.body)){
+        return res.status(400).json({
+            "message": "Invalid employee details"
+        })
+    }
     db.query('SELECT employee_id, email FROM employees WHERE email = ?',[email], (error, result) =>{
         if(error){
             res.status(500).json(error);
@@ -57,6 +63,12 @@ function editEmployee (req, res){
     
     const employee_id = req.params.EmployeeId;
  
+    if(!validation(req.body)){
+        return res.status(400).json({
+            "message": "Invalid employee details"
+        })
+    }
+    
     db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, employeeResults) =>{
         if (error){
             res.status(500).json(error);
