@@ -1,7 +1,11 @@
 const today = new Date();
+
+// Variable to set the maximum date to today to prevent future dates from being selected
 const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
 export const minDate = eighteenYearsAgo.toISOString().split('T')[0];
 
+
+ // Function to calculate the min date that can be selected
 export const calculateDate = (givenDate, years) => {
   const dateObj = new Date(givenDate);
   dateObj.setFullYear(dateObj.getFullYear() + years);
@@ -20,11 +24,15 @@ export const calculateDate = (givenDate, years) => {
     return age;
   };
 
-
+  // Function to convert the given date in th format of yyyy-MM-dd
   export const formatDate = (isoDate) => {
-    const dateParts = isoDate.split('T')[0].split('-');
-    const year = dateParts[0];
-    const month = dateParts[1];
-    const day = dateParts[2];
-    return `${year}-${month}-${day}`;
+    const dateParts = isoDate.split('T')[0];
+    return dateParts;
+  }
+
+  // Function to convert the 0/1 from checkbox to true/false
+  export const convertCheckboxToBoolean = (active) =>{
+    if(active === 1)
+      return true;
+    return false;
   }

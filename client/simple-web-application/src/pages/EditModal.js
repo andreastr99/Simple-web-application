@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { calculateDate, calculateAge, minDate, formatDate } from '../components/dateCalculation'
+import { calculateDate, calculateAge, minDate, formatDate, convertCheckboxToBoolean } from '../components/AssistingFunctions'
 
 export default function Modal  ({ showModal, handleClose, employee}) {
   const id = employee ? employee.employee_id : null;
@@ -26,11 +26,7 @@ export default function Modal  ({ showModal, handleClose, employee}) {
     const skill_level = e.target.value;
     setEditData((prevData) => ({ ...prevData, skill_level }));
   };
-  
-  const checkHandler = (e) => {
-    const { checked } = e.target;
-    setEditData((prevData) => ({ ...prevData, active: checked }));
-  }
+
 
   // Initialize the form fields with employee data when the employee prop changes
   useEffect(() => {
@@ -41,39 +37,41 @@ export default function Modal  ({ showModal, handleClose, employee}) {
         dob: formatDate(employee.dob),
         email: employee.email,
         skill_level: employee.skill_level,
-        active: employee.active,
+        active: convertCheckboxToBoolean(employee.active),
         age: employee.age,
       });
     }
   }, [employee]);
 
-  // Handle changes in the form fields
+
   const handleInput = (e) =>{
     const { name, value } = e.target;
     if (name === 'dob') {
       const age = calculateAge(value);
       setEditData((prevData) => ({ ...prevData, [name]: value, age }));
-    } else {
+    } else if (name === 'active'){
+      const { checked } = e.target;
+      setEditData((prevData) => ({ ...prevData, active: checked }));
+    }else {
       setEditData((prevData) => ({ ...prevData, [name]: value }));
     }
-  }  
+  }
+  
   // Handle form submission (update employee data)
   const handleSubmit = (e) => {
     //   console.log(id);
     e.preventDefault();
-  
+
+    console.log(editData);
     axios.put('http://localhost:8081/api/Employees/' + id, editData, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
       .then(res => {
-      // If the update is successful, the backend will respond with the updated employee data.
-      // You can choose to handle the response here if needed, but you don't necessarily need to reload the page.
-        console.log('Employee updated:', res.data);
+        window.location.reload();
       })
       .catch(function (err) {
-        // If there's an error during the update, you can handle it here.
         console.log('Error updating employee:', err);
       })
     handleClose();
@@ -112,7 +110,7 @@ export default function Modal  ({ showModal, handleClose, employee}) {
                   id="dob"
                   name="dob"
                   min={calculateDate(new Date(), -100)}
-                  max={minDate} // Set the maximum date to today to prevent future dates from being selected
+                  max={minDate}
                   required
                 />
               </div>
@@ -139,7 +137,7 @@ export default function Modal  ({ showModal, handleClose, employee}) {
 
               {/* Boolean */}
               <div className="form-check">
-                <input  onChange={checkHandler} value={editData.active} type="checkbox" className="form-check-input" id="active" name="active" />
+                <input  onChange={handleInput} value={editData.active} type="checkbox" className="form-check-input" id="active" name="active" checked={editData.active}/>
                 <label className="form-check-label" htmlFor="active">Is active?</label>
               </div>
               

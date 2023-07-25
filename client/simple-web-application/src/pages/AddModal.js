@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios'
-import { calculateDate, calculateAge, minDate } from '../components/dateCalculation'
+import { calculateDate, calculateAge, minDate } from '../components/AssistingFunctions'
 
 export default function Modal  ({ showModal, handleClose }) {
   const initialState = {
@@ -25,11 +25,6 @@ const handleDropdownChange = (e) => {
   setValues((prevData) => ({ ...prevData, skill_level }));
 };
 
-const checkHandler = (e) => {
-  const { checked } = e.target;
-  setValues((prevData) => ({ ...prevData, active: checked }));
-}
-
 const [values, setValues] = useState({
   first_name: '',
   last_name: '',
@@ -45,7 +40,10 @@ const handleInput = (e) =>{
   if (name === 'dob') {
     const age = calculateAge(value);
     setValues((prevData) => ({ ...prevData, [name]: value, age }));
-  } else {
+  } else if (name === 'active'){
+    const { checked } = e.target;
+    setValues((prevData) => ({ ...prevData, active: checked }));
+  }else {
     setValues((prevData) => ({ ...prevData, [name]: value }));
   }
 }
@@ -64,7 +62,7 @@ const handleSubmit = (e) => {
     .catch(function(err){
       console.log(err)
     })
-
+  
   setValues(initialState);
   handleClose();
 };
@@ -129,7 +127,7 @@ const handleSubmit = (e) => {
 
               {/* Boolean */}
               <div className="form-check">
-                <input  onChange={checkHandler} value={values.active} type="checkbox" className="form-check-input" id="active" name="active" />
+                <input  onChange={handleInput} value={values.active} type="checkbox" className="form-check-input" id="active" name="active" />
                 <label className="form-check-label" htmlFor="active">Is active?</label>
               </div>
               

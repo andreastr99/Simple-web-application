@@ -12,7 +12,8 @@ const connection = mysql.createConnection({
     port: process.env.DB_PORT,
     user: process.env.USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DBNAME
+    database: process.env.DB_DBNAME,
+    timezone: process.env.DB_TIMEZONE
 });
 
 //έλεγχος σύνδεσης και εμφάνιση κατάλληλου μηνύματος

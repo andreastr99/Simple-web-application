@@ -12,11 +12,9 @@ import login from '../assets/group.png';
 // input χρησιμοποιούμε το useState hook απο την React
 export default function LoginPage() {
     const navigate = useNavigate();
-    //Αρχικές τιμές το κενό
-    //ορίζω ένα variable state που ονομάζεται values και μια συνάρτηση setValues για
-    //να ενημερώνει αυτό το state variable.
-    //Επιστρέφει έναν πίνακα με δύο στοιχεία και όποτε θέλω να ενημερώσω τις τιμές
-    //καλώ την setValue συνάρτηση.
+
+    const [validCredentials, setValidCredentials] = useState(true);
+
     const [values, setValues] = useState({
         username: '',
         password: ''
@@ -45,8 +43,8 @@ export default function LoginPage() {
             }
         })
         .catch(err => {
-            if(err.response.status){
-                alert('Invalid credentials')
+            if(err.response.status === 401){
+                setValidCredentials(false);
             }
         });
     }
@@ -71,9 +69,13 @@ export default function LoginPage() {
                                 <label className="form-label" htmlFor="email">Your Email</label>
                             </div>
 
-                            <div className="form-outline mb-4">
+                            <div className="form-outline ">
                                 <input onChange={handleInput} type="password" id="password" name="password"  value={values.password} className="form-control form-control-lg"  required/>
                                 <label className="form-label" htmlFor="password">Password</label>
+                            </div>
+
+                            <div className="text-center">
+                              {!validCredentials && <p style={{"color": "red"}}>Wrong username or password</p>}
                             </div>
 
                             <div className="d-grid gap-2 mb-5">

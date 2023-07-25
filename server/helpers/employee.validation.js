@@ -16,7 +16,7 @@ function calculateAge (birthdate) {
     const last_name = employee.last_name;
     const dob = employee.dob; 
     const email = employee.email;
-    // const skill_level = employee.skill_level;
+    const skill_level = employee.skill_level;
     const active = employee.active;
     const age = employee.age;
     
