@@ -5,34 +5,34 @@ const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), to
 export const minDate = eighteenYearsAgo.toISOString().split('T')[0];
 
 
- // Function to calculate the min date that can be selected
+// Function to calculate the min date that can be selected
 export const calculateDate = (givenDate, years) => {
   const dateObj = new Date(givenDate);
   dateObj.setFullYear(dateObj.getFullYear() + years);
   return dateObj.toISOString().split('T')[0];
 };
 
-  // Function to calculate age based on the given date
- export const calculateAge = (birthdate) => {
-    const birthDate = new Date(birthdate);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
+// Function to calculate age based on the given date
+export const calculateAge = (birthdate) => {
+  const birthDate = new Date(birthdate);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
 
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  };
-
-  // Function to convert the given date in th format of yyyy-MM-dd
-  export const formatDate = (isoDate) => {
-    const dateParts = isoDate.split('T')[0];
-    return dateParts;
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
   }
+  return age;
+};
 
-  // Function to convert the 0/1 from checkbox to true/false
-  export const convertCheckboxToBoolean = (active) =>{
-    if(active === 1)
-      return true;
-    return false;
-  }
+// Function to convert the given date in th format of yyyy-MM-dd
+export const formatDate = (isoDate) => {
+  const dateParts = isoDate.split('T')[0];
+  return dateParts;
+}
+
+// Function to convert the 0/1 from checkbox to true/false
+export const convertCheckboxToBoolean = (active) => {
+  if (active === 1)
+    return true;
+  return false;
+}

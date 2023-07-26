@@ -1,6 +1,6 @@
-import { React,  useEffect, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import AddModal from './AddModal';
 import EditModal from './EditModal';
 import { formatDate } from '../components/AssistingFunctions'
@@ -8,7 +8,7 @@ import { formatDate } from '../components/AssistingFunctions'
 
 
 
-export default function HomePage(){
+export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
 
   const handleShowModal = () => {
@@ -39,31 +39,33 @@ export default function HomePage(){
     navigate("/");
   };
 
-  const handleDelete = (employee_id) =>{
+  const handleDelete = (employee_id) => {
     console.log(employee_id);
-    axios.delete('http://localhost:8081/api/Employees/'+ employee_id, {
-      headers:{
+    axios.delete('http://localhost:8081/api/Employees/' + employee_id, {
+      headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     }).then(res => {
       window.location.reload();
     })
-    .catch(function(err){
-      console.log(err)
-    })
+      .catch(function (err) {
+        console.log(err)
+      })
   }
 
-  useEffect(() =>{
-    axios.get('http://localhost:8081/api/Employees',{
-      headers:{
+  useEffect(() => {
+    axios.get('http://localhost:8081/api/Employees', {
+      headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
-    .then(res => setData(res.data))
-    .catch(error => console.log(error));
+      .then(res => setData(res.data))
+      .catch(function (error) {
+        handleLogout();
+      })
   }, [])
-  return(
-     <div className="container-fluid">
+  return (
+    <div className="container-fluid">
       <nav className="navbar navbar-expand-lg">
         <h2 className="p-2">Admin Dashboard</h2>
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -74,7 +76,7 @@ export default function HomePage(){
           </ul>
         </div>
       </nav>
-    
+
       <div className="row">
         {/* Vertical Navbar */}
         <nav className="col-md-3 col-lg-2 d-md-block sidebar">
@@ -96,6 +98,11 @@ export default function HomePage(){
         {/* Users Table */}
         <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <h2 className="mb-5 mt-3">User Management</h2>
+          <div className="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+            <button type="button" className="btn-close" data-dismiss="alert" aria-label="Close"></button>
+          </div>
+
           <div className="d-flex justify-content-start mb-2">
             <button type="button" className="btn btn-success" onClick={handleShowModal}>Add Employee +</button>
             <AddModal showModal={showModal} handleClose={handleCloseModal} />
@@ -116,7 +123,7 @@ export default function HomePage(){
                 </tr>
               </thead>
               <tbody>
-                {data.map((employee, index) =>{
+                {data.map((employee, index) => {
                   return <tr key={index}>
                     <td>{employee.employee_id}</td>
                     <td>{employee.first_name}</td>
@@ -129,9 +136,9 @@ export default function HomePage(){
                     <td>{employee.active}</td>
                     <td>{employee.age}</td>
                     <td>
-                      <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>                    
+                      <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
                       <EditModal showModal={showEditModal} handleClose={handleCloseEditModal} employee={selectedEmployee} />
-                      <button onClick={() => handleDelete(employee.employee_id)}className="btn btn-sm btn-danger">Delete</button>
+                      <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
                     </td>
                   </tr>
                 })}

@@ -3,53 +3,53 @@ const db = require('../database/database');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const uuid = require('uuid');
-const accessToken  = require('../controllers/user.controller');
+const accessToken = require('../controllers/user.controller');
 
-const {validation} = require('../helpers/employee.validation')
+const { validation } = require('../helpers/employee.validation')
 
 
 
-function getEmployees (req, res){
-   
+function getEmployees(req, res) {
+
     db.query('SELECT * FROM employees', (error, results) => {
-      if (error){
-        res.status(500).json(error);
-      }else
-          res.status(200).json(results);
+        if (error) {
+            res.status(500).json(error);
+        } else
+            res.status(200).json(results);
     });
 }
 
-function addEmployee (req, res) {
-    const {first_name, last_name, dob, email, skill_level, active, age} = req.body;
+function addEmployee(req, res) {
+    const { first_name, last_name, dob, email, skill_level, active, age } = req.body;
 
     const employee_id = uuid.v4();
-    if(!validation(req.body)){
+    if (!validation(req.body)) {
         return res.status(400).json({
             "message": "Invalid employee details"
         })
     }
-    db.query('SELECT employee_id, email FROM employees WHERE email = ?',[email], (error, result) =>{
-        if(error){
+    db.query('SELECT employee_id, email FROM employees WHERE email = ?', [email], (error, result) => {
+        if (error) {
             res.status(500).json(error);
         }
 
-        if(result.length > 0){
-            if(employee_id === result[0].employee_id){
+        if (result.length > 0) {
+            if (employee_id === result[0].employee_id) {
                 return res.json({
                     "message": "That employee id is already exists."
                 });
             }
-            if(email === result[0].email){
+            if (email === result[0].email) {
                 return res.json({
                     "message": "That email is already exists."
                 });
             }
         }
 
-        db.query('INSERT INTO employees SET ?', {employee_id: employee_id, first_name: first_name, last_name:last_name, dob:dob, email:email, skill_level:skill_level, active:active, age:age}, (error, result) =>{
-            if(error){
+        db.query('INSERT INTO employees SET ?', { employee_id: employee_id, first_name: first_name, last_name: last_name, dob: dob, email: email, skill_level: skill_level, active: active, age: age }, (error, result) => {
+            if (error) {
                 res.status(500).json(error);
-            }else{
+            } else {
                 res.status(201).json({
                     "employee_id": employee_id
                 })
@@ -58,65 +58,82 @@ function addEmployee (req, res) {
     })
 }
 
-function editEmployee (req, res){
-    const {first_name, last_name, dob, email, skill_level, active, age} = req.body;
-    
+function editEmployee(req, res) {
+    const { first_name, last_name, dob, email, skill_level, active, age } = req.body;
+
     const employee_id = req.params.EmployeeId;
- 
-    if(!validation(req.body)){
+
+    if (!validation(req.body)) {
         return res.status(400).json({
             "message": "Invalid employee details"
         })
     }
-    
-    db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, employeeResults) =>{
-        if (error){
+
+    db.query('SELECT email FROM employees WHERE employee_id <> ?', [employee_id], (error, emailResults) => {
+        if (error) {
             res.status(500).json(error);
         }
 
-        if(employeeResults){ 
-            db.query('UPDATE employees SET first_name = ?, last_name = ?, dob = ?, email = ?, skill_level = ?, active = ?, age = ? WHERE employee_id = ?', [first_name, last_name, dob, email, skill_level, active, age, employee_id], (error, result) => {
-                if (error){
-                    res.status(500).json(error);
+        if (emailResults.length > 0) {
+            for (let i = 0; i < emailResults.length; i++) {
+                if (email === emailResults[i].email) {
+                    return res.status(400).json({
+                        "message": "That email is already exists."
+                    });
                 }
-
-                if(result){
-                    db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, updatedEmployee) =>{
-                        if(error){
-                            res.status(500).json(error)
-                        }else{
-                            res.status(200).json(updatedEmployee[0]);
-                        }
-                    })
-                }
-                    
-            });
+            }
         }
 
-    })            
+
+        db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, employeeResults) => {
+            if (error) {
+                res.status(500).json(error);
+            }
+
+            if (employeeResults) {
+                db.query('UPDATE employees SET first_name = ?, last_name = ?, dob = ?, email = ?, skill_level = ?, active = ?, age = ? WHERE employee_id = ?', [first_name, last_name, dob, email, skill_level, active, age, employee_id], (error, result) => {
+                    if (error) {
+                        res.status(500).json(error);
+                    }
+
+                    if (result) {
+                        db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, updatedEmployee) => {
+                            if (error) {
+                                res.status(500).json(error)
+                            } else {
+                                res.status(200).json(updatedEmployee[0]);
+                            }
+                        })
+                    }
+
+                });
+            }
+
+        })
+    })
 }
 
-function deleteEmployee (req, res){
+function deleteEmployee(req, res) {
     const employee_id = req.params.EmployeeId;
 
-    db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, employeeFound) =>{
-        if (error){
-           res.status(500).json(error);
+    db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, employeeFound) => {
+        if (error) {
+            res.status(500).json(error);
         }
-        if(employeeFound.length > 0){
-            db.query('DELETE FROM employees WHERE employee_id = ?', [employee_id], (error, result) =>{
-                if (error){
+        if (employeeFound.length > 0) {
+            db.query('DELETE FROM employees WHERE employee_id = ?', [employee_id], (error, result) => {
+                if (error) {
                     res.status(500).json(error);
                 }
 
-                if(result){
+                if (result) {
                     res.status(200).json({
-                        "message" : "record deleted successfully!"
+                        "message": "record deleted successfully!"
                     });
                 }
             });
 
-        }else{
+        } else {
             res.status(401).json({
                 "message": "Invalid employee id"
             });
