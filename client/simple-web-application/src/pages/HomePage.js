@@ -1,14 +1,32 @@
 import { React, useEffect, useState } from 'react'
-import axios from 'axios'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import AddModal from './AddModal';
 import EditModal from './EditModal';
 import { formatDate } from '../components/AssistingFunctions'
-
+import Alert from 'react-bootstrap/Alert';
+import AxiosRequests from '../components/api';
 
 
 
 export default function HomePage() {
+
+  
+  const [alertState, setAlertState] = useState({
+    show: false,
+    message: '',
+    variant: '',
+  })
+
+  useEffect(() => {
+    if (alertState) {
+      const timer = setTimeout(() => {
+        setAlertState({ show: false });
+      }, 3000); // Set the duration here (e.g., 3000 milliseconds = 3 seconds)
+
+      return () => clearTimeout(timer); // Clear the timer when the component unmounts or when showAlert changes
+    }
+  }, [alertState]);
+
   const [showModal, setShowModal] = useState(false);
 
   const handleShowModal = () => {
@@ -41,12 +59,12 @@ export default function HomePage() {
 
   const handleDelete = (employee_id) => {
     console.log(employee_id);
-    axios.delete('http://localhost:8081/api/Employees/' + employee_id, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    }).then(res => {
-      window.location.reload();
+   
+    AxiosRequests.deleteEmployee(employee_id)
+    .then(res => {
+      // window.location.reload();
+      setAlertState({ variant: 'success', show: true, message: res.data.message })
+      // console.log(res);
     })
       .catch(function (err) {
         console.log(err)
@@ -54,16 +72,13 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:8081/api/Employees', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+    AxiosRequests.getAllEmployees()
       .then(res => setData(res.data))
       .catch(function (error) {
         handleLogout();
       })
   }, [])
+
   return (
     <div className="container-fluid">
       <nav className="navbar navbar-expand-lg">
@@ -96,16 +111,12 @@ export default function HomePage() {
         </nav>
 
         {/* Users Table */}
+
         <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <h2 className="mb-5 mt-3">User Management</h2>
-          <div className="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-            <button type="button" className="btn-close" data-dismiss="alert" aria-label="Close"></button>
-          </div>
-
           <div className="d-flex justify-content-start mb-2">
             <button type="button" className="btn btn-success" onClick={handleShowModal}>Add Employee +</button>
-            <AddModal showModal={showModal} handleClose={handleCloseModal} />
+            <AddModal showModal={showModal} handleClose={handleCloseModal} setAlertState={setAlertState} />
           </div>
           <div className="table-responsive">
             <table className="table table-hover">
@@ -137,13 +148,21 @@ export default function HomePage() {
                     <td>{employee.age}</td>
                     <td>
                       <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
-                      <EditModal showModal={showEditModal} handleClose={handleCloseEditModal} employee={selectedEmployee} />
+                      <EditModal showModal={showEditModal} handleClose={handleCloseEditModal} employee={selectedEmployee} setAlertState={setAlertState} />
                       <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
                     </td>
                   </tr>
                 })}
               </tbody>
             </table>
+          </div>
+
+          <div className="d-flex justify-content-start">
+            {alertState.show && (
+              <Alert variant={alertState.variant}>
+                {alertState.message}
+              </Alert>
+            )}
           </div>
         </main>
       </div>

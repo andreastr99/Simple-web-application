@@ -1,10 +1,7 @@
-import React from 'react'
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios'
-
-
+import AxiosRequests from '../components/api';
 import login from '../assets/group.png';
 
 
@@ -24,18 +21,18 @@ export default function LoginPage() {
     //όπου παίρνει το προηγούμενο state ως argument
     //ενημερώνει το state object με δυναμική ανάθεση καινούργιας τιμής που βασίζεται
     //στα e.target.name και e.target.value 
-    const handleInput = (e) => {
+    const handleInputChange = (e) => {
         setValues(prevData => ({ ...prevData, [e.target.name]: [e.target.value] }))
     }
 
-    const handleSubmit = (e) => {
+    const handleFormSubmit = (e) => {
         e.preventDefault();
         const formattedValues = {
             username: `${values.username}`,
             password: `${values.password}`
         };
 
-        axios.post("http://localhost:8081/api/login", formattedValues, {withCredentials:true})
+        AxiosRequests.login(formattedValues)
             .then(res => {
                 if (res.data.token) {
                     localStorage.setItem("token", res.data.token);
@@ -45,8 +42,11 @@ export default function LoginPage() {
             .catch(err => {
                 if (err.response.status === 401) {
                     setValidCredentials(false);
-                }
-            });
+                }else {
+                    console.error('An unexpected error occurred.');
+                  }
+            })
+
     }
 
     return (
@@ -62,15 +62,15 @@ export default function LoginPage() {
                                         <h2 className="text-uppercase text-center mb-3">Login</h2>
                                     </div>
 
-                                    <form action="/home" onSubmit={handleSubmit}>
+                                    <form action="/home" onSubmit={handleFormSubmit}>
 
                                         <div className="form-outline mb-4">
-                                            <input onChange={handleInput} type="text" id="username" name="username" value={values.username} className="form-control form-control-lg" required />
+                                            <input onChange={handleInputChange} type="text" id="username" name="username" value={values.username} className="form-control form-control-lg" required />
                                             <label className="form-label" htmlFor="email">Your Email</label>
                                         </div>
 
                                         <div className="form-outline ">
-                                            <input onChange={handleInput} type="password" id="password" name="password" value={values.password} className="form-control form-control-lg" required />
+                                            <input onChange={handleInputChange} type="password" id="password" name="password" value={values.password} className="form-control form-control-lg" required />
                                             <label className="form-label" htmlFor="password">Password</label>
                                         </div>
 

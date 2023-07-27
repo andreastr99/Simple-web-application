@@ -35,12 +35,12 @@ function addEmployee(req, res) {
 
         if (result.length > 0) {
             if (employee_id === result[0].employee_id) {
-                return res.json({
+                return res.status(400).json({
                     "message": "That employee id is already exists."
                 });
             }
             if (email === result[0].email) {
-                return res.json({
+                return res.status(400).json({
                     "message": "That email is already exists."
                 });
             }
@@ -116,11 +116,11 @@ function editEmployee(req, res) {
 function deleteEmployee(req, res) {
     const employee_id = req.params.EmployeeId;
 
-    db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, employeeFound) => {
-        if (error) {
-            res.status(500).json(error);
-        }
-        if (employeeFound.length > 0) {
+    // db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, employeeFound) => {
+    //     if (error) {
+    //         res.status(500).json(error);
+    //     }
+    //     if (employeeFound.length > 0) {
             db.query('DELETE FROM employees WHERE employee_id = ?', [employee_id], (error, result) => {
                 if (error) {
                     res.status(500).json(error);
@@ -128,17 +128,17 @@ function deleteEmployee(req, res) {
 
                 if (result) {
                     res.status(200).json({
-                        "message": "record deleted successfully!"
+                        "message": "Record deleted successfully!"
                     });
                 }
             });
 
-        } else {
-            res.status(401).json({
-                "message": "Invalid employee id"
-            });
-        }
-    });
+    //     } else {
+    //         res.status(401).json({
+    //             "message": "Invalid employee id"
+    //         });
+    //     }
+    // });
 }
 
 module.exports = {

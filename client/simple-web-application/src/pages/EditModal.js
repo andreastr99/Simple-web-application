@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
 import { calculateDate, calculateAge, minDate, formatDate, convertCheckboxToBoolean } from '../components/AssistingFunctions'
+import AxiosRequests from '../components/api';
+import SKILL_LEVEL_OPTIONS from '../components/SkillLevelOptions';
 
-export default function Modal({ showModal, handleClose, employee }) {
+
+export default function Modal({ showModal, handleClose, employee, setAlertState }) {
+
   const id = employee ? employee.employee_id : null;
 
   const [editData, setEditData] = useState({
@@ -14,13 +17,6 @@ export default function Modal({ showModal, handleClose, employee }) {
     active: false,
     age: '',
   });
-
-  const dropdownOptions = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    // Add more options as needed
-  ];
 
   const handleDropdownChange = (e) => {
     const skill_level = e.target.value;
@@ -57,20 +53,26 @@ export default function Modal({ showModal, handleClose, employee }) {
     }
   }
 
-  // Handle form submission (update employee data)
   const handleSubmit = (e) => {
-    //   console.log(id);
+
     e.preventDefault();
-    axios.put('http://localhost:8081/api/Employees/' + id, editData, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+    AxiosRequests.editEmployee(id, editData)
       .then(res => {
-        console.log(res.data.message);
-        // window.location.reload();
+        setAlertState({ variant: 'success', show: true, message: 'Data saved successfully' })
+        console.log(res);
+        window.location.reload();
       })
       .catch(function (err) {
+        setEditData({
+          first_name: employee.first_name,
+          last_name: employee.last_name,
+          dob: formatDate(employee.dob),
+          email: employee.email,
+          skill_level: employee.skill_level,
+          active: convertCheckboxToBoolean(employee.active),
+          age: employee.age,
+        });
+        setAlertState({ variant: 'warning', show: true, message: err.response.data.message })
         console.log('Error updating employee:', err.response.data.message);
       })
     handleClose();
@@ -125,7 +127,7 @@ export default function Modal({ showModal, handleClose, employee }) {
                 <label htmlFor="skill-level">Employee skill level: </label>
                 <select id="skill-level" value={editData.skill_level} onChange={handleDropdownChange} required>
                   <option value="">Select an option</option>
-                  {dropdownOptions.map((option) => (
+                  {SKILL_LEVEL_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
@@ -153,7 +155,6 @@ export default function Modal({ showModal, handleClose, employee }) {
 
             </form>
           </div>
-
         </div>
       </div>
     </div>
