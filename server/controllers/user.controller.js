@@ -3,8 +3,6 @@ const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const uuid = require('uuid');
 
-
-
 /**
  * Επειδή η διαδικασία του για το hashing του κωδικού μπορεί να πάρει λίγο παραπάνω
  * χρόνο από ότι θέλει η διαδικασία εκτέλεσης του κώδικα χρησιμοποιούμε το await και async
@@ -45,57 +43,107 @@ function register(req, res) {
     })
 }
 
-function login(req, res) {
-    const { username, password } = req.body;
+// function login(req, res) {
+//     const { username, password } = req.body;
 
-    db.query('SELECT id, username, password FROM users WHERE username = ?', [username], (error, results) => {
+//     db.query('SELECT id, username, password FROM users WHERE username = ?', [username], (error, results) => {
 
-        if (error) {
-            res.status(500).json(error);
-        }
+//         if (error) {
+//             res.status(500).json(error);
+//         }
 
-        if (results.length > 0) {
-            bcryptjs.compare(password, results[0].password, (error, passwordResult) => {
-                if (error) {
-                    res.status(500).json(error);
-                }
-                if (passwordResult) {
-                    const user = {
-                        id: results[0].id,
-                        username: username
-                    };
+//         if (results.length > 0) {
+//             bcryptjs.compare(password, results[0].password, (error, passwordResult) => {
+//                 if (error) {
+//                     res.status(500).json(error);
+//                 }
+//                 if (passwordResult) {
+//                     const user = {
+//                         id: results[0].id,
+//                         username: username
+//                     };
 
-                    const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '7d' })
-                    res.cookie("refreshToken", token, {
+//                     const refreshToken = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '7d' })
+//                     res.cookie("refreshToken", refreshToken, {
 
-                        httpOnly: true,
+//                         httpOnly: true,
 
-                        secure: process.env.NODE_ENV === "production",
+//                         secure: process.env.NODE_ENV === "production",
 
-                        sameSite: "strict",
+//                         sameSite: "strict",
 
-                    });
+//                     });
 
-                    const accessToken = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' }, (error, token) => {
-                        res.status(200).json({
-                            token: token
-                        })
-                    })
+//                     const accessToken = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' }, (error, token) => {
+//                         res.status(200).json({
+//                             token: token
+//                         })
+//                     })
 
 
-                } else {
-                    res.status(401).json({
-                        "message": "Invalid credentials"
-                    });
-                }
-            })
-        } else {
-            res.status(401).json({
-                "message": "Invalid credentials"
-            });
-        }
-    });
+//                 } else {
+//                     res.status(401).json({
+//                         "message": "Invalid credentials"
+//                     });
+//                 }
+//             })
+//         } else {
+//             res.status(401).json({
+//                 "message": "Invalid credentials"
+//             });
+//         }
+//     });
+// }
+
+function generateAccessToken(user) {
+  return jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
 }
+
+function generateRefreshToken(user) {
+  return jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '7d' });
+}
+
+function login(req, res) {
+  const { username, password } = req.body;
+
+  db.query('SELECT id, username, password FROM users WHERE username = ?', [username], (error, results) => {
+    if (error) {
+      return res.status(500).json(error);
+    }
+
+    if (results.length > 0) {
+      bcryptjs.compare(password, results[0].password, (error, passwordResult) => {
+        if (error) {
+          return res.status(500).json(error);
+        }
+        if (passwordResult) {
+          const user = {
+            id: results[0].id,
+            username: username
+          };
+
+          const refreshToken = generateRefreshToken(user);
+          res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+          });
+
+          const accessToken = generateAccessToken(user);
+          return res.status(200).json({ token: accessToken });
+        } else {
+          return res.status(401).json({ message: 'Invalid credentials' });
+        }
+      });
+    } else {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+  });
+}
+
+
+
+
 module.exports = {
     register: register,
     login: login

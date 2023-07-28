@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AxiosRequests from '../components/api';
+import AxiosRequests from '../components/axios';
 import login from '../assets/group.png';
 
 
@@ -25,27 +25,41 @@ export default function LoginPage() {
         setValues(prevData => ({ ...prevData, [e.target.name]: [e.target.value] }))
     }
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
         const formattedValues = {
             username: `${values.username}`,
             password: `${values.password}`
         };
 
-        AxiosRequests.login(formattedValues)
-            .then(res => {
-                if (res.data.token) {
-                    localStorage.setItem("token", res.data.token);
-                    navigate("/home");
-                }
-            })
-            .catch(err => {
-                if (err.response.status === 401) {
-                    setValidCredentials(false);
-                }else {
-                    console.error('An unexpected error occurred.');
-                  }
-            })
+        // AxiosRequests.login(formattedValues)
+        //     .then(res => {
+        //         if (res.data.token) {
+        //             localStorage.setItem("token", res.data.token);
+        //             navigate("/home");
+        //         }
+        //     })
+        //     .catch(err => {
+        //         if (err.response.status === 401) {
+        //             setValidCredentials(false);
+        //         }else {
+        //             console.error('An unexpected error occurred.');
+        //           }
+        //     })
+
+        try {
+            const res = await AxiosRequests.login(formattedValues);
+            if (res.data.token) {
+                localStorage.setItem("token", res.data.token);
+                navigate("/home");
+            }
+        } catch (err) {
+            if (err.response && err.response.status === 401) {
+                setValidCredentials(false);
+            } else {
+                console.error('An unexpected error occurred.');
+            }
+        }
 
     }
 
