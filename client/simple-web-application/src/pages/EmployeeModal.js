@@ -4,6 +4,7 @@ import AxiosRequests from '../components/axios';
 import SKILL_LEVEL_OPTIONS from '../components/SkillLevelOptions';
 
 export default function Modal({ showModal, handleClose, setAlertState, employee, title, onAddEmployee, onEditEmployee }) {
+
   const initialState = {
     first_name: '',
     last_name: '',
@@ -61,51 +62,6 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
     }
   };
 
-  // const handleFormSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   if (employee) {
-  //     AxiosRequests.editEmployee(employee.employee_id, values)
-  //       .then(res => {
-  //         setAlertState({ variant: 'success', show: true, message: 'Data saved successfully' })
-  //         onEditEmployee(res.data);
-          
-  //       })
-  //       .catch(function (err) {
-  //         setValues({
-  //           first_name: employee.first_name,
-  //           last_name: employee.last_name,
-  //           dob: formatDate(employee.dob),
-  //           email: employee.email,
-  //           skill_level: employee.skill_level,
-  //           active: convertCheckboxToBoolean(employee.active),
-  //           age: employee.age,
-  //         });
-  //         setAlertState({ variant: 'warning', show: true, message: err.response.data.message })
-  //         console.log('Error updating employee:', err.response.data.message);
-  //       })
-  //   } else {
-  //     AxiosRequests.addEmployee(values)
-  //       .then(res => {
-  //         setAlertState({ variant: 'success', show: true, message: 'Employee added successfully' })
-  //         // console.log(res.data)
-  //         // setValues({employee_id: res.data})
-  //         onAddEmployee(res.data, values); // Pass the new employee data to the parent component
-  //         // if (onAddEmployee) {
-  //         //   onAddEmployee(res.data); // Pass the new employee data to the parent component
-  //         // }
-  //       })
-  //       .catch(function (err) {
-  //         console.log(err)
-  //         // setAlertState({ variant: 'danger', show: true, message: err.response.data.message })
-  //         setAlertState({ variant: 'danger', show: true, message: err.response?.data?.message || 'Error adding employee' });
-  //         console.error('Error adding employee:', err.response?.data?.message || err.message);
-  //       })
-  //     setValues(initialState);
-  //   }
-  //   handleClose();
-  // };
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
@@ -132,14 +88,12 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
       try {
         const res = await AxiosRequests.addEmployee(values);
         setAlertState({ variant: 'success', show: true, message: 'Employee added successfully' });
-        onAddEmployee(res.data, values);
+        onAddEmployee(res.data.employee_id, values);
+        // console.log("res data:", res.data.employee_id); // Log the 'res.data' object separately
+        // console.log("values:", values); 
       } catch (err) {
         console.log(err);
-        setAlertState({
-          variant: 'danger',
-          show: true,
-          message: err.response?.data?.message || 'Error adding employee',
-        });
+        setAlertState({variant: 'danger', show: true, message: err.response?.data?.message || 'Error adding employee',});
         console.error('Error adding employee:', err.response?.data?.message || err.message);
       }
       setValues(initialState);
@@ -191,7 +145,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
                 <input onChange={handleInputChange} value={values.email} type="email" pattern='^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$' className="form-control" id="email" name="email" required />
               </div>
 
-              {/* Dropdown Menu */}
+              Dropdown Menu
               <div className="form-group mt-3 mb-2">
                 <label htmlFor="skill-level">Employee skill level: </label>
                 <select id="skill-level" value={values.skill_level} onChange={handleDropdownChange} required>

@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import EmployeeModal from './EmployeeModal';
-import { formatDate } from '../components/AssistingFunctions'
+import { formatDate, getSkill } from '../components/AssistingFunctions'
 import AxiosRequests from '../components/axios';
 import AlertMessage from '../components/AlertMessage';
+
 
 export default function HomePage() {
   const [alertState, setAlertState] = useState({
@@ -42,25 +43,20 @@ export default function HomePage() {
     setData(prevData => prevData.map(employee => (employee.employee_id === updatedEmployee.employee_id ? updatedEmployee : employee)));
   };
 
-    // Function to add new employee to the data state
-    const handleAddEmployee = (employee_id, newEmployee) => {
-      console.log("sdfsd " + employee_id + " "+ newEmployee.employee_id);
-      setData(prevData => [...prevData, newEmployee]);
-    };
-  
+  // Function to add new employee to the data state
+  const handleAddEmployee = (employee_id, newEmployee) => {
+
+    setData(prevData => [...prevData, newEmployee]);
+  };
+
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
-  // const handleLogout = useCallback(() => {
-  //   localStorage.removeItem('token');
-  //   navigate("/");
-  // }, [navigate]);
-
-
-    const handleLogout = () => {
+  const handleLogout = () => {
     localStorage.removeItem('token');
     navigate("/");
   };
+
   const handleDelete = (employee_id) => {
     console.log(employee_id);
 
@@ -76,26 +72,19 @@ export default function HomePage() {
       })
   }
 
-  // useEffect(() => {
-  //   AxiosRequests.getAllEmployees()
-  //     .then(res => setData(res.data))
-  //     .catch(function (error) {
-  //         handleLogout();
-  //     })
-  // }, [])
+
+  const fetchData = async () => {
+    try {
+      const res = await AxiosRequests.getAllEmployees();
+      // fetchDataAndStoreInArray();
+      setData(res.data);
+      // console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    // Convert the useEffect into an async function
-    const fetchData = async () => {
-      try {
-        const res = await AxiosRequests.getAllEmployees();
-        setData(res.data);
-      } catch (error) {
-        handleLogout();
-      }
-    };
-
-    // Call the async function to fetch the data
     fetchData();
   }, []);
 
@@ -116,22 +105,10 @@ export default function HomePage() {
         {/* Vertical Navbar */}
         <nav className="col-md-3 col-lg-2 d-md-block sidebar">
           <div className="position-sticky">
-            <ul className="nav flex-column">
-              <li className="nav-item">
-                <a className="nav-link active" href="#option1">Option 1</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#option2">Option 2</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#option3">aa</a>
-              </li>
-            </ul>
           </div>
         </nav>
 
         {/* Users Table */}
-
         <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <h2 className="mb-5 mt-3">User Management</h2>
           <div className="d-flex justify-content-start mb-2">
@@ -150,7 +127,7 @@ export default function HomePage() {
                   <th>Skill level</th>
                   <th>Active</th>
                   <th>Age</th>
-                  <th>Action</th>
+                  <th style={{ "textAlign": "center" }}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -159,16 +136,15 @@ export default function HomePage() {
                     <td>{employee.employee_id}</td>
                     <td>{employee.first_name}</td>
                     <td>{employee.last_name}</td>
-                    {/* <td>{employee.dob}</td> */}
-                    {/* <td>{new Date(employee.dob).toLocaleDateString()}</td> */}
                     <td>{formatDate(employee.dob)}</td>
                     <td>{employee.email}</td>
-                    <td>{employee.skill_level}</td>
+                    <td>{getSkill(employee.skill_level)}</td>
+                    {/* <td>{employee.skill_level}</td> */}
                     <td>{employee.active}</td>
                     <td>{employee.age}</td>
                     <td>
                       <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
-                      <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee}  />
+                      <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} />
                       <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
                     </td>
                   </tr>

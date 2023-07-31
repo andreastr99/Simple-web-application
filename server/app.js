@@ -25,9 +25,11 @@ app.use(cookieParser());
 //έτσι κάνω εισαγωγή ένα route που μόλις όρισα
 const employeesRoute = require('./routes/employees');
 const userRoute = require('./routes/user');
+const skillRoute = require('./routes/skills')
 
 app.use("/api", employeesRoute);
 app.use("/api", userRoute);
+app.use("/api", skillRoute);
 
 
 module.exports = app;

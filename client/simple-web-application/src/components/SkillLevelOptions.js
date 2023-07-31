@@ -1,9 +1,22 @@
-const SKILL_LEVEL_OPTIONS = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    // Add more options as needed
-  ];
-  
-  export default SKILL_LEVEL_OPTIONS;
-  
+import AxiosRequests from "./axios";
+
+const fetchData =  () => {
+  let skills = [];
+
+  AxiosRequests.getSkillLevel()
+    .then(response => {
+
+      for (let key in response.data) {
+        const skill = {
+          value: response.data[key].skill_level_id,
+          label: response.data[key].skill_name
+        }
+        skills.push(skill)
+      }
+
+    });
+  return skills
+};
+
+const SKILL_LEVEL_OPTIONS = fetchData();
+export default SKILL_LEVEL_OPTIONS;

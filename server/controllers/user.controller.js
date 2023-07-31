@@ -96,55 +96,81 @@ function register(req, res) {
 // }
 
 function generateAccessToken(user) {
-  return jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
+    return jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
 }
 
 function generateRefreshToken(user) {
-  return jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '7d' });
+    return jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '7d' });
 }
 
 function login(req, res) {
-  const { username, password } = req.body;
+    const { username, password } = req.body;
 
-  db.query('SELECT id, username, password FROM users WHERE username = ?', [username], (error, results) => {
-    if (error) {
-      return res.status(500).json(error);
-    }
-
-    if (results.length > 0) {
-      bcryptjs.compare(password, results[0].password, (error, passwordResult) => {
+    db.query('SELECT id, username, password FROM users WHERE username = ?', [username], (error, results) => {
         if (error) {
-          return res.status(500).json(error);
+            return res.status(500).json(error);
         }
-        if (passwordResult) {
-          const user = {
-            id: results[0].id,
-            username: username
-          };
 
-          const refreshToken = generateRefreshToken(user);
-          res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-          });
+        if (results.length > 0) {
+            bcryptjs.compare(password, results[0].password, (error, passwordResult) => {
+                if (error) {
+                    return res.status(500).json(error);
+                }
+                if (passwordResult) {
+                    const user = {
+                        id: results[0].id,
+                        username: username
+                    };
 
-          const accessToken = generateAccessToken(user);
-          return res.status(200).json({ token: accessToken });
+                    const refreshToken = generateRefreshToken(user);
+                    res.cookie('refreshToken', refreshToken, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === 'production',
+                        sameSite: 'strict',
+                    });
+
+                    const accessToken = generateAccessToken(user);
+                    return res.status(200).json({ token: accessToken });
+                } else {
+                    return res.status(401).json({ message: 'Invalid credentials' });
+                }
+            });
         } else {
-          return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
-      });
-    } else {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-  });
+    });
 }
 
+function refreshToken(req, res) {
+    const refreshToken = req.cookies.refreshToken; // If using cookies
+    // const refreshToken = req.body.refreshToken; // If using request body
 
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token not found' });
+    }
+
+    try {
+        // Validate the refresh token
+        const decodedRefreshToken = jwt.verify(refreshToken, process.env.SECRET_KEY);
+
+        // Generate a new access token
+        const user = {
+            id: decodedRefreshToken.id,
+            username: decodedRefreshToken.username,
+        };
+        const accessToken = generateAccessToken(user);
+
+        // Send the new access token to the client
+        return res.status(200).json({ token: accessToken });
+    } catch (error) {
+        // Handle token validation errors
+        return res.status(401).json({ message: 'Invalid refresh token' });
+    }
+}
 
 
 module.exports = {
     register: register,
-    login: login
+    login: login,
+    refreshToken: refreshToken
 }

@@ -8,44 +8,30 @@ import login from '../assets/group.png';
 // Για να πάρουμε ό,τι δίνει ο χρήστης στο email και password
 // input χρησιμοποιούμε το useState hook απο την React
 export default function LoginPage() {
+    //used for navigation through pages
     const navigate = useNavigate();
 
+    //if the users have the wrong cred an error message popsup to the screen
     const [validCredentials, setValidCredentials] = useState(true);
-
+    //users credentials
     const [values, setValues] = useState({
         username: '',
         password: ''
     });
 
-    //δέχεται ένα event object (πχ e) και καλεί την συνάρτηση setValues
-    //όπου παίρνει το προηγούμενο state ως argument
-    //ενημερώνει το state object με δυναμική ανάθεση καινούργιας τιμής που βασίζεται
-    //στα e.target.name και e.target.value 
+    
+
     const handleInputChange = (e) => {
         setValues(prevData => ({ ...prevData, [e.target.name]: [e.target.value] }))
     }
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+
         const formattedValues = {
             username: `${values.username}`,
             password: `${values.password}`
         };
-
-        // AxiosRequests.login(formattedValues)
-        //     .then(res => {
-        //         if (res.data.token) {
-        //             localStorage.setItem("token", res.data.token);
-        //             navigate("/home");
-        //         }
-        //     })
-        //     .catch(err => {
-        //         if (err.response.status === 401) {
-        //             setValidCredentials(false);
-        //         }else {
-        //             console.error('An unexpected error occurred.');
-        //           }
-        //     })
 
         try {
             const res = await AxiosRequests.login(formattedValues);
@@ -53,15 +39,14 @@ export default function LoginPage() {
                 localStorage.setItem("token", res.data.token);
                 navigate("/home");
             }
-        } catch (err) {
-            if (err.response && err.response.status === 401) {
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
                 setValidCredentials(false);
             } else {
                 console.error('An unexpected error occurred.');
             }
         }
-
-    }
+    };
 
     return (
         <section className="vh-100 background-stripe">
