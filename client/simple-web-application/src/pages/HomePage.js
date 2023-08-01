@@ -67,7 +67,7 @@ export default function HomePage() {
         // console.log(res);
       })
       .catch(function (err) {
-        console.log(err)
+        setAlertState({ variant: 'danger', show: true, message: err.response.data.message })
       })
   }
 
@@ -87,13 +87,14 @@ export default function HomePage() {
       // console.log(res.data);
     } catch (error) {
       console.log(error);
+      navigate("/")
     } finally {
       setLoading(false); // Set loading state to false when data fetching is done
     }
   };
 
   useEffect(() => {
-    if(localStorage.getItem("token"))
+    // if(localStorage.getItem("token"))
       fetchData();
   }, []);
 

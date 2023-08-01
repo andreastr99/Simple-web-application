@@ -19,9 +19,10 @@ async function validation(employee) {
   const last_name = employee.last_name;
   const dob = employee.dob;
   const email = employee.email;
+  let skill_level = false;
   const active = employee.active;
   const age = employee.age;
-  let skill_level;
+  
   
   await skillController.findSkill(employee.skill_level)
     .then((exists) => {

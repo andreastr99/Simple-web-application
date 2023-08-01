@@ -34,7 +34,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
   })
 
   useEffect(() => {
-    if (employee) {
+    if (employee && localStorage.getItem("token")) {
       const { first_name, last_name, dob, email, skill_level, active, age } = employee;
       setValues({
         first_name,
@@ -82,7 +82,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
           active: convertCheckboxToBoolean(employee.active),
           age: employee.age,
         }));
-        setAlertState({ variant: 'warning', show: true, message: err.response.data.message });
+        setAlertState({ variant: 'danger', show: true, message: err.response.data.message });
         console.error('Error updating employee:', err.response.data.message);
       }
     } else {
@@ -92,13 +92,16 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
         const newState = {
           ...values,
           employee_id: res.data.employee_id,
+          active: convertCheckboxToBoolean(values.active)
         };
 
+        console.log(values);
+        console.log(convertCheckboxToBoolean(values.active));
         setAlertState({ variant: 'success', show: true, message: 'Employee added successfully' });
         onAddEmployee(newState);
       } catch (err) {
         console.log(err);
-        setAlertState({variant: 'danger', show: true, message: err.response?.data?.message || 'Error adding employee',});
+        setAlertState({ variant: 'danger', show: true, message: err.response?.data?.message || 'Error adding employee', });
         console.error('Error adding employee:', err.response?.data?.message || err.message);
       }
       setValues(initialState);
