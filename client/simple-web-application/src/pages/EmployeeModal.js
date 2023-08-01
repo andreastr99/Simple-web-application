@@ -6,6 +6,7 @@ import SKILL_LEVEL_OPTIONS from '../components/SkillLevelOptions';
 export default function Modal({ showModal, handleClose, setAlertState, employee, title, onAddEmployee, onEditEmployee }) {
 
   const initialState = {
+    employee_id: '',
     first_name: '',
     last_name: '',
     dob: '',
@@ -87,10 +88,14 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
     } else {
       try {
         const res = await AxiosRequests.addEmployee(values);
+
+        const newState = {
+          ...values,
+          employee_id: res.data.employee_id,
+        };
+
         setAlertState({ variant: 'success', show: true, message: 'Employee added successfully' });
-        onAddEmployee(res.data.employee_id, values);
-        // console.log("res data:", res.data.employee_id); // Log the 'res.data' object separately
-        // console.log("values:", values); 
+        onAddEmployee(newState);
       } catch (err) {
         console.log(err);
         setAlertState({variant: 'danger', show: true, message: err.response?.data?.message || 'Error adding employee',});

@@ -34,11 +34,15 @@ export default function LoginPage() {
         };
 
         try {
-            const res = await AxiosRequests.login(formattedValues);
-            if (res.data.token) {
-                localStorage.setItem("token", res.data.token);
-                navigate("/home");
-            }
+            await AxiosRequests.login(formattedValues)
+            .then(res => {
+                if (res.data.token) {
+                    localStorage.setItem("token", res.data.token);
+                    navigate("/home");
+                    window.location.reload();
+                }
+            });
+           
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 setValidCredentials(false);

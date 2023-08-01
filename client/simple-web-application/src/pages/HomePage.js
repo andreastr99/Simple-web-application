@@ -44,8 +44,7 @@ export default function HomePage() {
   };
 
   // Function to add new employee to the data state
-  const handleAddEmployee = (employee_id, newEmployee) => {
-
+  const handleAddEmployee = (newEmployee) => {
     setData(prevData => [...prevData, newEmployee]);
   };
 
@@ -72,21 +71,35 @@ export default function HomePage() {
       })
   }
 
-
+  const [loading, setLoading] = useState(true);
   const fetchData = async () => {
     try {
-      const res = await AxiosRequests.getAllEmployees();
-      // fetchDataAndStoreInArray();
-      setData(res.data);
+      // const res = await AxiosRequests.getAllEmployees();
+      // setData(res.data);
+      // // console.log(res.data);
+
+      await AxiosRequests.getAllEmployees()
+      .then(res => {
+        setData(res.data);
+      });
+
+
       // console.log(res.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false); // Set loading state to false when data fetching is done
     }
   };
 
   useEffect(() => {
-    fetchData();
+    if(localStorage.getItem("token"))
+      fetchData();
   }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="container-fluid">
@@ -116,41 +129,50 @@ export default function HomePage() {
             <EmployeeModal showModal={showModal} handleClose={handleCloseModal} setAlertState={setAlertState} employee={null} title={"Add Employee"} onAddEmployee={handleAddEmployee} />
           </div>
           <div className="table-responsive">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Date of Birth</th>
-                  <th>Email</th>
-                  <th>Skill level</th>
-                  <th>Active</th>
-                  <th>Age</th>
-                  <th style={{ "textAlign": "center" }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((employee) => {
-                  return <tr key={employee.employee_id}>
-                    <td>{employee.employee_id}</td>
-                    <td>{employee.first_name}</td>
-                    <td>{employee.last_name}</td>
-                    <td>{formatDate(employee.dob)}</td>
-                    <td>{employee.email}</td>
-                    <td>{getSkill(employee.skill_level)}</td>
-                    {/* <td>{employee.skill_level}</td> */}
-                    <td>{employee.active}</td>
-                    <td>{employee.age}</td>
-                    <td>
-                      <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
-                      <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} />
-                      <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
-                    </td>
+            <div>
+              {data.length > 0 ? (
+                // Render the table when data is available
+                <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Date of Birth</th>
+                    <th>Email</th>
+                    <th>Skill level</th>
+                    <th>Active</th>
+                    <th>Age</th>
+                    <th style={{ "textAlign": "center" }}>Action</th>
                   </tr>
-                })}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data.map((employee) => {
+                    return <tr key={employee.employee_id}>
+                      <td>{employee.employee_id}</td>
+                      <td>{employee.first_name}</td>
+                      <td>{employee.last_name}</td>
+                      <td>{formatDate(employee.dob)}</td>
+                      <td>{employee.email}</td>
+                      <td>{getSkill(employee.skill_level)}</td>
+                      {/* <td>{employee.skill_level}</td> */}
+                      <td>{employee.active}</td>
+                      <td>{employee.age}</td>
+                      <td>
+                        <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
+                        <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} />
+                        <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
+                      </td>
+                    </tr>
+                  })}
+                </tbody>
+              </table>
+              ) : (
+                // Show a message when data is not available
+                <p>No data available.</p>
+              )}
+            </div>
+            
           </div>
 
           <div className="d-flex justify-content-start">
