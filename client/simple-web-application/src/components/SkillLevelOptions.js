@@ -1,6 +1,6 @@
 import AxiosRequests from "./axios";
 
-const fetchData =  () => {
+const fetchSkillData = () => {
   let skills = [];
 
   AxiosRequests.getSkillLevel()
@@ -14,9 +14,13 @@ const fetchData =  () => {
         skills.push(skill)
       }
 
+    })
+    .catch(error => {
+      // Handle the error here
+      console.error("Error fetching skill levels:", error);
     });
   return skills
 };
 
-const SKILL_LEVEL_OPTIONS = fetchData();
+const SKILL_LEVEL_OPTIONS = fetchSkillData();
 export default SKILL_LEVEL_OPTIONS;

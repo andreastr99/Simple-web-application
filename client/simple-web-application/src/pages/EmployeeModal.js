@@ -82,8 +82,8 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
           active: convertCheckboxToBoolean(employee.active),
           age: employee.age,
         }));
-        setAlertState({ variant: 'danger', show: true, message: err.response.data.message });
-        console.error('Error updating employee:', err.response.data.message);
+        setAlertState({ variant: 'danger', show: true, message: err.response.data.message, statusCode: err.response.request.status });
+        console.error('Error updating employee:', err.response.request.status);
       }
     } else {
       try {
@@ -92,16 +92,13 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
         const newState = {
           ...values,
           employee_id: res.data.employee_id,
-          active: convertCheckboxToBoolean(values.active)
+          active: values.active
         };
 
-        console.log(values);
-        console.log(convertCheckboxToBoolean(values.active));
-        setAlertState({ variant: 'success', show: true, message: 'Employee added successfully' });
+        setAlertState({ variant: 'success', show: true, message: 'Employee added successfully', statusCode: 200 });
         onAddEmployee(newState);
       } catch (err) {
-        console.log(err);
-        setAlertState({ variant: 'danger', show: true, message: err.response?.data?.message || 'Error adding employee', });
+        setAlertState({ variant: 'danger', show: true, message: err.response?.data?.message || 'Error adding employee', statusCode: err.response.request.status });
         console.error('Error adding employee:', err.response?.data?.message || err.message);
       }
       setValues(initialState);
@@ -153,7 +150,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
                 <input onChange={handleInputChange} value={values.email} type="email" pattern='^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$' className="form-control" id="email" name="email" required />
               </div>
 
-              Dropdown Menu
+              {/* Dropdown Menu */}
               <div className="form-group mt-3 mb-2">
                 <label htmlFor="skill-level">Employee skill level: </label>
                 <select id="skill-level" value={values.skill_level} onChange={handleDropdownChange} required>
@@ -170,8 +167,6 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
               {/* Boolean */}
               <div className="form-check">
                 <input onChange={handleInputChange} checked={values.active} type="checkbox" className="form-check-input" id="active" name="active" />
-
-
                 <label className="form-check-label" htmlFor="active">Is active?</label>
               </div>
 

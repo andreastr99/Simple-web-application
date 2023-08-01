@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import Alert from 'react-bootstrap/Alert';
 
-const AlertMessage = ({ show, message, variant, onClose }) => {
+const AlertMessage = ({ show, message, variant, statusCode, onClose }) => {
   useEffect(() => {
     if (show) {
       const timer = setTimeout(() => {
-        if(variant==='danger'){
+        if(statusCode === 401){
           window.location.reload();
           onClose();
         }

@@ -5,12 +5,12 @@ import { formatDate, getSkill } from '../components/AssistingFunctions'
 import AxiosRequests from '../components/axios';
 import AlertMessage from '../components/AlertMessage';
 
-
 export default function HomePage() {
   const [alertState, setAlertState] = useState({
     show: false,
     message: '',
     variant: '',
+    statusCode: ''
   })
 
   const handleCloseAlert = () => {
@@ -43,7 +43,6 @@ export default function HomePage() {
     setData(prevData => prevData.map(employee => (employee.employee_id === updatedEmployee.employee_id ? updatedEmployee : employee)));
   };
 
-  // Function to add new employee to the data state
   const handleAddEmployee = (newEmployee) => {
     setData(prevData => [...prevData, newEmployee]);
   };
@@ -61,27 +60,22 @@ export default function HomePage() {
 
     AxiosRequests.deleteEmployee(employee_id)
       .then(res => {
-        // window.location.reload();
-        setAlertState({ variant: 'success', show: true, message: res.data.message })
+        setAlertState({ variant: 'success', show: true, message: res.data.message, statusCode: 200 })
         setData(prevData => prevData.filter(employee => employee.employee_id !== employee_id));
-        // console.log(res);
       })
       .catch(function (err) {
-        setAlertState({ variant: 'danger', show: true, message: err.response.data.message })
+        setAlertState({ variant: 'danger', show: true, message: err.response.data.message, statusCode: err.response.request.status })
       })
   }
 
   const [loading, setLoading] = useState(true);
   const fetchData = async () => {
     try {
-      // const res = await AxiosRequests.getAllEmployees();
-      // setData(res.data);
-      // // console.log(res.data);
 
       await AxiosRequests.getAllEmployees()
-      .then(res => {
-        setData(res.data);
-      });
+        .then(res => {
+          setData(res.data);
+        });
 
 
       // console.log(res.data);
@@ -95,7 +89,7 @@ export default function HomePage() {
 
   useEffect(() => {
     // if(localStorage.getItem("token"))
-      fetchData();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -133,51 +127,56 @@ export default function HomePage() {
             <div>
               {data.length > 0 ? (
                 // Render the table when data is available
-                <table className="table table-hover">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Date of Birth</th>
-                    <th>Email</th>
-                    <th>Skill level</th>
-                    <th>Active</th>
-                    <th>Age</th>
-                    <th style={{ "textAlign": "center" }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((employee) => {
-                    return <tr key={employee.employee_id}>
-                      <td>{employee.employee_id}</td>
-                      <td>{employee.first_name}</td>
-                      <td>{employee.last_name}</td>
-                      <td>{formatDate(employee.dob)}</td>
-                      <td>{employee.email}</td>
-                      <td>{getSkill(employee.skill_level)}</td>
-                      {/* <td>{employee.skill_level}</td> */}
-                      <td>{employee.active}</td>
-                      <td>{employee.age}</td>
-                      <td>
-                        <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
-                        <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} />
-                        <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
-                      </td>
+                <table className="table table-hover" >
+                  <thead>
+                    <tr>
+                      {/* <th>ID</th> */}
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Date of Birth</th>
+                      <th>Email</th>
+                      <th>Skill level</th>
+                      <th>Active</th>
+                      <th>Age</th>
+                      <th style={{ "textAlign": "center" }}>Action</th>
                     </tr>
-                  })}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {data.map((employee) => {
+                      return <tr key={employee.employee_id}>
+                        {/* <td>{employee.employee_id}</td> */}
+                        <td>{employee.first_name}</td>
+                        <td>{employee.last_name}</td>
+                        <td>{formatDate(employee.dob)}</td>
+                        <td>{employee.email}</td>
+                        <td>{getSkill(employee.skill_level)}</td>
+                        <td style={{ "textAlign": "center" }}>
+                          {(employee.active) ? (
+                            <span className="text-success ">&#x2713;</span>
+                          ) : (
+                            <span className="text-danger">&#x2717;</span>
+                          )}
+                        </td>
+                        <td>{employee.age}</td>
+                        <td>
+                          <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
+                          <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} />
+                          <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                      </tr>
+                    })}
+                  </tbody>
+                </table>
               ) : (
                 // Show a message when data is not available
                 <p>No data available.</p>
               )}
             </div>
-            
+
           </div>
 
           <div className="d-flex justify-content-start">
-            <AlertMessage show={alertState.show} message={alertState.message} variant={alertState.variant} onClose={handleCloseAlert} />
+            <AlertMessage show={alertState.show} message={alertState.message} variant={alertState.variant} statusCode={alertState.statusCode} onClose={handleCloseAlert} />
           </div>
         </main>
       </div>
