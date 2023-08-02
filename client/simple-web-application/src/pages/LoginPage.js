@@ -39,7 +39,7 @@ export default function LoginPage() {
                 if (res.data.token) {
                     localStorage.setItem("token", res.data.token);
                     navigate("/home");
-                    window.location.reload();
+                    // window.location.reload();
                 }
             });
            

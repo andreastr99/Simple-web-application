@@ -38,7 +38,7 @@ api.interceptors.response.use(
 
 // // Response interceptor
 // api.interceptors.response.use(
-//   (response) => {
+//   async (response) => {
 //     return response;
 //   },
 //   async (error) => {
@@ -48,15 +48,20 @@ api.interceptors.response.use(
 //     if (error.response && error.response.status === 401 && !originalRequest._retry) {
 //       originalRequest._retry = true;
 
-//       // Get the refresh token from local storage
-//       const refreshToken = localStorage.getItem('refreshToken');
+//       // Get the refresh token from the cookie
+//       const refreshToken = document.cookie.replace(
+//         /(?:(?:^|.*;\s*)refreshToken\s*=\s*([^;]*).*$)|^.*$/,
+//         '$1'
+//       );
+
+//       // const refreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU3NmYxMTAzLTE0MDktNGRkMi05M2FjLTRjMDk1N2I0MDIxYiIsInVzZXJuYW1lIjoiYW5kcmVhcyIsImlhdCI6MTY5MDk3NjczNCwiZXhwIjoxNjkxNTgxNTM0fQ._MrosC8upebvC-vEO9TYtUxoENb0QCa6_ucfqTZO_J4"
 
 //       // Make a request to the server to get a new access token using the refresh token
 //       try {
-//         const res = await axios.post('http://localhost:8081/api/refresh_token', { refreshToken });
-//         const newAccessToken = res.data.accessToken;
+//         const res = await api.post('http://localhost:8081/api/refresh-token', { refreshToken });
+//         const newAccessToken = res.data.token;
 
-//         // Update the access token in local storage
+//         // Update the access token in localStorage
 //         localStorage.setItem('token', newAccessToken);
 
 //         // Retry the original request with the new access token
@@ -73,5 +78,4 @@ api.interceptors.response.use(
 //     return Promise.reject(error);
 //   }
 // );
-
 export default api;

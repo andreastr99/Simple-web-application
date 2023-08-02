@@ -52,6 +52,7 @@ export default function HomePage() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     navigate("/");
   };
 

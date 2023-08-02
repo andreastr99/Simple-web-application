@@ -14,38 +14,46 @@ function calculateAge(birthdate) {
 }
 
 
-async function validation(employee) {
+function validation(employee) {
   const first_name = employee.first_name;
   const last_name = employee.last_name;
   const dob = employee.dob;
   const email = employee.email;
-  let skill_level = false;
   const active = employee.active;
   const age = employee.age;
-  
-  
-  await skillController.findSkill(employee.skill_level)
-    .then((exists) => {
-      skill_level = exists
-    })
-    .catch((error) => {
-      console.error('Error occurred:', error);
-    });
 
-  
-
-  // console.log(skill_level);
   const emailRegex = new RegExp('^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$');
-  const nameRegex = new RegExp('[a-zA-Z]+');
+  const nameRegex = new RegExp("^([a-zA-Z]+[ \\-']{0,1}){1,3}$");
 
-  if ((first_name.match(nameRegex) && last_name.match(nameRegex)) && (calculateAge(dob) >= 18 && calculateAge(dob) <= 100) && email.match(emailRegex) && (active === true || active === false) && age === calculateAge(dob) && skill_level) {
+  if ((nameRegex.test(first_name) && nameRegex.test(last_name)) && (calculateAge(dob) >= 18 && calculateAge(dob) <= 100) && email.match(emailRegex) && (active === true || active === false) && (age === calculateAge(dob))) {
     return true;
   }
 
   return false;
 }
 
+async function skillIdValidation(skill_level_id) {
+  try {
+    const results = await new Promise((resolve, reject) => {
+      db.query("SELECT * FROM skill_levels WHERE skill_level_id = ?", [skill_level_id], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    return results.length === 0;
+  } catch (error) {
+    // Handle the error here, such as logging or throwing
+    console.error("Error while querying the database:", error);
+    throw error;
+  }
+}
+
 
 module.exports = {
-  validation: validation
+  validation: validation,
+  skillIdValidation: skillIdValidation
 }

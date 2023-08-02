@@ -18,25 +18,6 @@ function getAllSkills(req, res) {
     });
 }
 
-function findSkill(skill_level_id) {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM skill_levels WHERE skill_level_id = ?';
-        db.query(query, [skill_level_id], (error, results) => {
-          if (error) {
-            reject(error);
-          } else {
-            if (results.length > 0) {
-              resolve(true);
-            } else {
-              resolve(false);
-            }
-          }
-        });
-      });
-}
-
-
 module.exports = {
     getAllSkills: getAllSkills,
-    findSkill: findSkill
 }
