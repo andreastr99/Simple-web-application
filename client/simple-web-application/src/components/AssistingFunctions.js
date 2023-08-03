@@ -1,6 +1,3 @@
-import AxiosRequests from '../components/axios';
-import SKILL_LEVEL_OPTIONS from './SkillLevelOptions';
-
 const today = new Date();
 
 // Variable to set the maximum date to today to prevent future dates from being selected
@@ -40,7 +37,7 @@ export const convertCheckboxToBoolean = (active) => {
   return false;
 }
 
-export const getSkill = (skill_level_id) => {
-  const matchedOption = SKILL_LEVEL_OPTIONS.find(option => option.value === skill_level_id);
-  return matchedOption ? matchedOption.label : null;
+export const getSkill = (skill_level_id, skills) => {
+  const matchedOption = skills.find(skill => skill.skill_level_id === skill_level_id);
+  return matchedOption ? matchedOption.skill_name : null;
 }

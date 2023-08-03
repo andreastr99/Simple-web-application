@@ -48,11 +48,11 @@ export default function HomePage() {
   };
 
   const [data, setData] = useState([]);
+  const [skillLevels, setSkillLevels] = useState([])
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     navigate("/");
   };
 
@@ -78,7 +78,11 @@ export default function HomePage() {
           setData(res.data);
         });
 
-
+      await AxiosRequests.getSkillLevels()
+      .then(res => {
+        setSkillLevels(res.data)
+      
+      })
       // console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -122,7 +126,7 @@ export default function HomePage() {
           <h2 className="mb-5 mt-3">User Management</h2>
           <div className="d-flex justify-content-start mb-2">
             <button type="button" className="btn btn-success" onClick={handleShowModal}>Add Employee +</button>
-            <EmployeeModal showModal={showModal} handleClose={handleCloseModal} setAlertState={setAlertState} employee={null} title={"Add Employee"} onAddEmployee={handleAddEmployee} />
+            <EmployeeModal showModal={showModal} handleClose={handleCloseModal} setAlertState={setAlertState} employee={null} title={"Add Employee"} onAddEmployee={handleAddEmployee} skillLevels={skillLevels} />
           </div>
           <div className="table-responsive">
             <div>
@@ -150,7 +154,9 @@ export default function HomePage() {
                         <td>{employee.last_name}</td>
                         <td>{formatDate(employee.dob)}</td>
                         <td>{employee.email}</td>
-                        <td>{getSkill(employee.skill_level)}</td>
+                        {/* <td>{console.log(getSkill(employee.skill_level))}</td> */}
+                        <td>{getSkill(employee.skill_level, skillLevels)}</td>
+                        {/* <td>{console.log(skillLevels)}</td> */}
                         <td style={{ "textAlign": "center" }}>
                           {(employee.active) ? (
                             <span className="text-success ">&#x2713;</span>
@@ -161,7 +167,7 @@ export default function HomePage() {
                         <td>{employee.age}</td>
                         <td>
                           <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
-                          <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} />
+                          <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} skillLevels={skillLevels}/>
                           <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
                         </td>
                       </tr>

@@ -18,6 +18,18 @@ function getAllSkills(req, res) {
     });
 }
 
+function getSkill (req, res){
+    const skill_level_id = req.params.skillId;
+
+    db.query('SELECT skill_name FROM skill_levels WHERE skill_level_id = ?', [skill_level_id], (error, results) => {
+        if (error) {
+            return res.status(500).json(error);
+        } else
+            return res.status(200).json(results[0]);
+    });
+}
+
 module.exports = {
     getAllSkills: getAllSkills,
+    getSkill: getSkill
 }

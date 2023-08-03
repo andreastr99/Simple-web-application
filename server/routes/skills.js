@@ -4,5 +4,5 @@ const checkAuthMiddleware = require('../middleware/authentication');
 const router = express.Router();
 
 router.get('/skill-levels', checkAuthMiddleware.checkAuth, skillController.getAllSkills);
-
+router.get('/skill-level/:skillId', checkAuthMiddleware.checkAuth, skillController.getSkill);
 module.exports = router;

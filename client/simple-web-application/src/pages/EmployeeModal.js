@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { calculateDate, calculateAge, minDate, formatDate, convertCheckboxToBoolean } from '../components/AssistingFunctions'
+import { calculateDate, calculateAge, minDate, formatDate, convertCheckboxToBoolean, getSkill } from '../components/AssistingFunctions'
 import AxiosRequests from '../components/axios';
-import SKILL_LEVEL_OPTIONS from '../components/SkillLevelOptions';
 
-export default function Modal({ showModal, handleClose, setAlertState, employee, title, onAddEmployee, onEditEmployee }) {
+import Dropdown from '../components/Dropdown';
+
+export default function Modal({ showModal, handleClose, setAlertState, employee, title, onAddEmployee, onEditEmployee, skillLevels}) {
 
   const initialState = {
     employee_id: '',
@@ -18,20 +19,13 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
 
 
   const handleDropdownChange = (e) => {
-    const skill_level = e.target.value;
-    setValues((prevData) => ({ ...prevData, skill_level }));
+    const skill = e.target.value;
+    setValues((prevData) => ({ ...prevData, skill }));
+    setSelectedSkillLevel(skill);
   };
 
-  const [values, setValues] = useState({
-    employee_id: '',
-    first_name: '',
-    last_name: '',
-    dob: '',
-    email: '',
-    skill_level: '',
-    active: false,
-    age: '',
-  })
+  const [values, setValues] = useState(initialState)
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState('');
 
   useEffect(() => {
     if (employee && localStorage.getItem("token")) {
@@ -45,8 +39,26 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
         active: convertCheckboxToBoolean(active),
         age,
       });
+      setSelectedSkillLevel(skill_level); // Set the selected skill level state
     }
   }, [employee]);
+
+  // useEffect(() => {
+  //   if (employee && localStorage.getItem("token")) {
+  //     const { first_name, last_name, dob, email, skill_level, active, age } = employee;
+  //     setValues({
+  //       first_name,
+  //       last_name,
+  //       dob: formatDate(dob),
+  //       email,
+  //       skill_level: getSkill(skill_level, skillLevels),
+  //       active: convertCheckboxToBoolean(active),
+  //       age,
+  //     });
+
+  //     console.log(getSkill(skill_level, skillLevels))
+  //   }
+  // }, [employee, skillLevels]);
 
 
   const handleInputChange = (e) => {
@@ -78,7 +90,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
           last_name: employee.last_name,
           dob: formatDate(employee.dob),
           email: employee.email,
-          skill_level: employee.skill_level,
+          skill_level: getSkill(employee.skill_level, skillLevels),
           active: convertCheckboxToBoolean(employee.active),
           age: employee.age,
         }));
@@ -151,7 +163,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
               </div>
 
               {/* Dropdown Menu */}
-              <div className="form-group mt-3 mb-2">
+              {/* <div className="form-group mt-3 mb-2">
                 <label htmlFor="skill-level">Employee skill level: </label>
                 <select id="skill-level" value={values.skill_level} onChange={handleDropdownChange} required>
                   <option value="">Select an option</option>
@@ -161,7 +173,8 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
+              <Dropdown onChange={handleDropdownChange} data={skillLevels} currentValue={selectedSkillLevel} required/>
 
 
               {/* Boolean */}

@@ -6,7 +6,8 @@ const axiosRequests = {
   deleteEmployee: (employee_id) => axiosInterceptor.delete(`/Employees/${employee_id}`),
   addEmployee: (employee) => axiosInterceptor.post('/Employees', employee),
   editEmployee: (employee_id, employee) => axiosInterceptor.put(`/Employees/${employee_id}`, employee),
-  getSkillLevel: () => axiosInterceptor.get('/skill-levels'),
+  getSkillLevels: () => axiosInterceptor.get('/skill-levels'),
+  getSkill: (skill_level_id) => axiosInterceptor.get(`/skill-level/${skill_level_id}`)
 };
 
 export default axiosRequests;
