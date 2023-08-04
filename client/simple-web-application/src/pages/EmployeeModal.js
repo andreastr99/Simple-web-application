@@ -28,7 +28,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
 
 
   useEffect(() => {
-    if (employee && localStorage.getItem("token")) {
+    if (employee) {
       const { first_name, last_name, dob, email, skill_level, active, age } = employee;
       setValues({
         first_name,
