@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { calculateDate, calculateAge, minDate, formatDate, convertCheckboxToBoolean, getSkill } from '../components/AssistingFunctions'
+import { calculateDate, calculateAge, minDate, formatDate, getSkill, convertCheckboxToBoolean } from '../components/AssistingFunctions'
 import AxiosRequests from '../components/axios';
 
 import Dropdown from '../components/Dropdown';
@@ -17,15 +17,15 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
     age: ''
   };
 
-
-  const handleDropdownChange = (e) => {
-    const skill = e.target.value;
-    setValues((prevData) => ({ ...prevData, skill }));
-    setSelectedSkillLevel(skill);
-  };
-
   const [values, setValues] = useState(initialState)
   const [selectedSkillLevel, setSelectedSkillLevel] = useState('');
+
+  const handleDropdownChange = (e) => {
+    const skill_level = e.target.value;
+    setValues((prevData) => ({ ...prevData, skill_level }));
+    setSelectedSkillLevel(skill_level);
+  };
+
 
   useEffect(() => {
     if (employee && localStorage.getItem("token")) {
@@ -43,29 +43,10 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
     }
   }, [employee]);
 
-  // useEffect(() => {
-  //   if (employee && localStorage.getItem("token")) {
-  //     const { first_name, last_name, dob, email, skill_level, active, age } = employee;
-  //     setValues({
-  //       first_name,
-  //       last_name,
-  //       dob: formatDate(dob),
-  //       email,
-  //       skill_level: getSkill(skill_level, skillLevels),
-  //       active: convertCheckboxToBoolean(active),
-  //       age,
-  //     });
-
-  //     console.log(getSkill(skill_level, skillLevels))
-  //   }
-  // }, [employee, skillLevels]);
-
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === 'checkbox') {
-      // For checkboxes, the 'value' attribute does not represent the current value of the checkbox.
-      // Instead, we should use 'checked' to determine if the checkbox is checked or not.
       setValues((prevData) => ({ ...prevData, [name]: checked }));
     } else if (name === 'dob') {
       const age = calculateAge(value);
@@ -77,7 +58,6 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
     if (employee) {
       try {
         const res = await AxiosRequests.editEmployee(employee.employee_id, values);
@@ -91,20 +71,18 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
           dob: formatDate(employee.dob),
           email: employee.email,
           skill_level: getSkill(employee.skill_level, skillLevels),
-          active: convertCheckboxToBoolean(employee.active),
+          active:  convertCheckboxToBoolean(employee.active),
           age: employee.age,
         }));
         setAlertState({ variant: 'danger', show: true, message: err.response.data.message, statusCode: err.response.request.status });
         console.error('Error updating employee:', err.response.request.status);
       }
     } else {
-      try {
-        const res = await AxiosRequests.addEmployee(values);
-
+      try {      
+        const res = await AxiosRequests.addEmployee(values);     
         const newState = {
           ...values,
           employee_id: res.data.employee_id,
-          active: values.active
         };
 
         setAlertState({ variant: 'success', show: true, message: 'Employee added successfully', statusCode: 200 });
@@ -114,6 +92,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
         console.error('Error adding employee:', err.response?.data?.message || err.message);
       }
       setValues(initialState);
+      setSelectedSkillLevel('');
     }
     handleClose();
   };
@@ -163,17 +142,6 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
               </div>
 
               {/* Dropdown Menu */}
-              {/* <div className="form-group mt-3 mb-2">
-                <label htmlFor="skill-level">Employee skill level: </label>
-                <select id="skill-level" value={values.skill_level} onChange={handleDropdownChange} required>
-                  <option value="">Select an option</option>
-                  {SKILL_LEVEL_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
               <Dropdown onChange={handleDropdownChange} data={skillLevels} currentValue={selectedSkillLevel} required/>
 
 

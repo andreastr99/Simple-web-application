@@ -23,7 +23,7 @@ function register(req, res) {
         }
 
         if (result.length > 0) {
-            return res.json({
+            return res.status(400).json({
                 "message": "That username is already exists."
             });
         }
@@ -132,11 +132,11 @@ function login(req, res) {
                     const accessToken = generateAccessToken(user);
                     return res.status(200).json({ token: accessToken });
                 } else {
-                    return res.status(401).json({ message: 'Invalid credentials' });
+                    return res.status(401).json({ "message": 'Invalid credentials' });
                 }
             });
         } else {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ "message": 'Invalid credentials' });
         }
     });
 }

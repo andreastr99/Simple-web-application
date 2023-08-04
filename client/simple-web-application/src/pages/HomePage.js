@@ -6,6 +6,11 @@ import AxiosRequests from '../components/axios';
 import AlertMessage from '../components/AlertMessage';
 
 export default function HomePage() {
+  
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const navigate = useNavigate();
+
+  // ----------- Alert Message -----------
   const [alertState, setAlertState] = useState({
     show: false,
     message: '',
@@ -16,21 +21,25 @@ export default function HomePage() {
   const handleCloseAlert = () => {
     setAlertState({ show: false });
   };
+  // -------------------------------------
 
-  const [showModal, setShowModal] = useState(false);
 
-  const handleShowModal = () => {
-    setShowModal(true);
+  // --------------Add Modal--------------
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  const handleShowAddModal = () => {
+    setShowAddModal(true);
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const handleCloseAddModal = () => {
+    setShowAddModal(false);
   };
+  // -------------------------------------
 
+  // --------------Edit Modal--------------
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  const handleEditModal = (employee) => {
+  const handleShowEditModal = (employee) => {
     setSelectedEmployee(employee);
     setShowEditModal(true);
   };
@@ -38,7 +47,9 @@ export default function HomePage() {
   const handleCloseEditModal = () => {
     setShowEditModal(false);
   };
+  // ---------------------------------------
 
+  // ---------------------------------------
   const handleEditEmployee = (updatedEmployee) => {
     setData(prevData => prevData.map(employee => (employee.employee_id === updatedEmployee.employee_id ? updatedEmployee : employee)));
   };
@@ -46,10 +57,7 @@ export default function HomePage() {
   const handleAddEmployee = (newEmployee) => {
     setData(prevData => [...prevData, newEmployee]);
   };
-
-  const [data, setData] = useState([]);
-  const [skillLevels, setSkillLevels] = useState([])
-  const navigate = useNavigate();
+  // ---------------------------------------
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -68,7 +76,10 @@ export default function HomePage() {
         setAlertState({ variant: 'danger', show: true, message: err.response.data.message, statusCode: err.response.request.status })
       })
   }
-
+  
+  // ----------- When login functionality -----------
+  const [data, setData] = useState([]);
+  const [skillLevels, setSkillLevels] = useState([])
   const [loading, setLoading] = useState(true);
   const fetchData = async () => {
     try {
@@ -79,28 +90,27 @@ export default function HomePage() {
         });
 
       await AxiosRequests.getSkillLevels()
-      .then(res => {
-        setSkillLevels(res.data)
-      
-      })
-      // console.log(res.data);
+        .then(res => {
+          setSkillLevels(res.data)
+
+        })
     } catch (error) {
       console.log(error);
       navigate("/")
     } finally {
-      setLoading(false); // Set loading state to false when data fetching is done
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    // if(localStorage.getItem("token"))
     fetchData();
   }, []);
 
   if (loading) {
     return <p>Loading...</p>;
   }
-
+  // ------------------------------------------------
+  
   return (
     <div className="container-fluid">
       <nav className="navbar navbar-expand-lg">
@@ -125,8 +135,8 @@ export default function HomePage() {
         <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <h2 className="mb-5 mt-3">User Management</h2>
           <div className="d-flex justify-content-start mb-2">
-            <button type="button" className="btn btn-success" onClick={handleShowModal}>Add Employee +</button>
-            <EmployeeModal showModal={showModal} handleClose={handleCloseModal} setAlertState={setAlertState} employee={null} title={"Add Employee"} onAddEmployee={handleAddEmployee} skillLevels={skillLevels} />
+            <button type="button" className="btn btn-success" onClick={handleShowAddModal}>Add Employee +</button>
+            <EmployeeModal showModal={showAddModal} handleClose={handleCloseAddModal} setAlertState={setAlertState} employee={null} title={"Add Employee"} onAddEmployee={handleAddEmployee} skillLevels={skillLevels} />
           </div>
           <div className="table-responsive">
             <div>
@@ -166,8 +176,8 @@ export default function HomePage() {
                         </td>
                         <td>{employee.age}</td>
                         <td>
-                          <button onClick={() => handleEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
-                          <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} skillLevels={skillLevels}/>
+                          <button onClick={() => handleShowEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
+                          <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} skillLevels={skillLevels} />
                           <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
                         </td>
                       </tr>

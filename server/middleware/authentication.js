@@ -24,7 +24,6 @@ function checkAuth(req, res, next) {
     //Αφού πάρουμε το token πρέπει να το κάνουμε decode
     //για να σιγουρευτούμε ότι είναι γνήσιο
 
-    // const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
     jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
       if (err) {
         return res.status(401).json({ "message": "Invalid token" });

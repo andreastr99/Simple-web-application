@@ -6,30 +6,40 @@ const uuid = require('uuid');
 const accessToken = require('../controllers/user.controller');
 
 const { validation, skillIdValidation } = require('../helpers/employee.validation')
+const { handleDatabaseResponse, dataValidation } = require('../helpers/utils')
 
 function getEmployees(req, res) {
 
     db.query('SELECT * FROM employees', (error, results) => {
-        if (error) {
-            return res.status(500).json(error);
-        } else
-            return res.status(200).json(results);
+        // if (error) {
+        //     return res.status(500).json(error);
+        // } else
+        //     return res.status(200).json(results);
+        handleDatabaseResponse(res, error, results);
     });
 }
 
 async function addEmployee(req, res) {
     const { first_name, last_name, dob, email, skill_level, active, age } = req.body;
 
-    let isValid;
+
+    // let isValid;
     
-    try {
-         isValid = await skillIdValidation(skill_level);
-      } catch (error) {
-        // Handle the error here if needed
-        console.error("An error occurred:", error);
-      }
+    // try {
+    //      isValid = await skillIdValidation(skill_level);
+    //   } catch (error) {
+    //     // Handle the error here if needed
+    //     console.error("An error occurred:", error);
+    //   }
   
-    if (!validation(req.body) || isValid) {
+    // if (!validation(req.body) || isValid) {
+    //     return res.status(400).json({
+    //         "message": "Invalid employee details"
+    //     })
+    // }
+    let isValid = await dataValidation(req);
+
+    if (!isValid) {
         return res.status(400).json({
             "message": "Invalid employee details"
         })
@@ -57,7 +67,9 @@ async function addEmployee(req, res) {
         db.query('INSERT INTO employees SET ?', { employee_id: employee_id, first_name: first_name, last_name: last_name, dob: dob, email: email, skill_level: skill_level, active: active, age: age }, (error, result) => {
             if (error) {
                 return res.status(500).json(error);
-            } if (result) {
+            } 
+            
+            if (result) {
                 return res.status(201).json({
                     "employee_id": employee_id
                 })
@@ -66,12 +78,27 @@ async function addEmployee(req, res) {
     })
 }
 
-function editEmployee(req, res) {
+async function editEmployee(req, res) {
     const { first_name, last_name, dob, email, skill_level, active, age } = req.body;
 
     const employee_id = req.params.EmployeeId;
-    // console.log("req body ",req.body)
-    if (!validation(req.body)) {
+
+    // let isValid;
+
+    // try {
+    //     isValid = await skillIdValidation(skill_level);
+    // } catch (error) {
+    //     // Handle the error here if needed
+    //     console.error("An error occurred:", error);
+    // }
+
+    // if (!validation(req.body) || !isValid) {
+    //     return res.status(400).json({
+    //         "message": "Invalid employee details"
+    //     })
+    // }
+    let isValid = await dataValidation(req);
+    if (!isValid) {
         return res.status(400).json({
             "message": "Invalid employee details"
         })
@@ -111,6 +138,7 @@ function editEmployee(req, res) {
                             } else {
                                 return res.status(200).json(updatedEmployee[0]);
                             }
+                            // handleDatabaseResponse(res, error, updatedEmployee[0]);
                         })
                     }
 
