@@ -54,14 +54,14 @@ api.interceptors.response.use(
     // Check if the error is due to an expired access token
     // if (error.response && error.response.status === 401 && !originalRequest._retry) {
       if ((!accessToken || error.response?.status === 401) && !originalRequest._retry) {
-      originalRequest._retry = true;
+      // originalRequest._retry = true;
 
       
       
-      // if (!refreshToken) {
-      //   // If the refreshToken doesn't exist, return a 401 status code directly
-      //   return Promise.reject(error);
-      // }
+      if (!refreshToken) {
+        // If the refreshToken doesn't exist, return a 401 status code directly
+        return Promise.reject(error);
+      }
       
       // Make a request to the server to get a new access token using the refresh token
       try {

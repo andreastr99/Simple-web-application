@@ -141,6 +141,15 @@ function login(req, res) {
     });
 }
 
+function logout(req, res) {
+
+    res.clearCookie('refreshToken');
+
+    // Send a success response
+    res.status(200).json({ message: 'Logout successful' });
+};
+
+
 function refreshToken(req, res) {
     const refreshToken = req.cookies.refreshToken; // If using cookies
     // const refreshToken = req.body.refreshToken; // If using request body
@@ -172,5 +181,6 @@ function refreshToken(req, res) {
 module.exports = {
     register: register,
     login: login,
+    logout: logout,
     refreshToken: refreshToken
 }

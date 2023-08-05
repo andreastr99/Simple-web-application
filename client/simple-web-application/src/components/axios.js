@@ -2,6 +2,7 @@ import axiosInterceptor from './axios.interceptors';
 
 const axiosRequests = {
   login: (credentials) => axiosInterceptor.post('/login', credentials),
+  logout: () => axiosInterceptor.post('/logout'),
   getAllEmployees: () => axiosInterceptor.get('/Employees'),
   deleteEmployee: (employee_id) => axiosInterceptor.delete(`/Employees/${employee_id}`),
   addEmployee: (employee) => axiosInterceptor.post('/Employees', employee),

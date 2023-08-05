@@ -60,9 +60,10 @@ export default function HomePage() {
   // ---------------------------------------
 
   const handleLogout = () => {
+  
     localStorage.removeItem('token');
-    document.cookie = 'refreshToken=""; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    navigate("/");
+    AxiosRequests.logout().then(navigate("/"))
+    
   };
 
   const handleDelete = (employee_id) => {
@@ -81,7 +82,7 @@ export default function HomePage() {
   // ----------- When login functionality -----------
   const [data, setData] = useState([]);
   const [skillLevels, setSkillLevels] = useState([])
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const fetchData = async () => {
     try {
 
@@ -97,7 +98,7 @@ export default function HomePage() {
         })
     } catch (error) {
       console.log(error);
-      // navigate("/")
+      navigate("/")
     } finally {
       setLoading(false);
     }

@@ -1,29 +1,42 @@
-// import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
+
+const ProtectedRoute = () => {
+  const accessToken = localStorage.getItem("token");
+  return (
+    accessToken ? <Outlet /> : <Navigate to='/' />
+  )
+}
+
+export default ProtectedRoute;
+
+// import { Navigate, Outlet } from 'react-router-dom';
 
 // const ProtectedRoute = () => {
+//   const refreshToken = document.cookie.replace(
+//     /(?:(?:^|.*;\s*)refreshToken\s*=\s*([^;]*).*$)|^.*$/,
+//     '$1'
+//   );
 //   const accessToken = localStorage.getItem("token");
+
+//   // Check if both refresh token and access token exist
+//   const isAuthenticated = refreshToken && accessToken;
+
 //   return (
-//     accessToken ? <Outlet /> : <Navigate to='/' />
-//   )
+//     !isAuthenticated ? <Outlet /> : <Navigate to='/' />
+//   );
 // }
 
 // export default ProtectedRoute;
 
-import { Navigate, Outlet } from 'react-router-dom';
+// import React from 'react';
+// import { Outlet, Navigate } from 'react-router-dom';
+// import {useAuth} from './AssistingFunctions';
 
-const ProtectedRoute = () => {
-  const refreshToken = document.cookie.replace(
-    /(?:(?:^|.*;\s*)refreshToken\s*=\s*([^;]*).*$)|^.*$/,
-    '$1'
-  );
-  const accessToken = localStorage.getItem("token");
+// const ProtectedRoute = () => {
+//   // Check authentication using the useAuth hook
+//   const isAuthenticated = useAuth();
 
-  // Check if both refresh token and access token exist
-  const isAuthenticated = refreshToken && accessToken;
+//   return isAuthenticated ? <Outlet /> :<Navigate to='/home' />;
+// };
 
-  return (
-    !isAuthenticated ? <Outlet /> : <Navigate to='/' />
-  );
-}
-
-export default ProtectedRoute;
+// export default ProtectedRoute;
