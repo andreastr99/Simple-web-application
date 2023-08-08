@@ -1,7 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom'
+import AxiosRequests from './axios';
+
 
 const ProtectedRoute = () => {
   const accessToken = localStorage.getItem("token");
+  // const refreshToken = await AxiosRequests.checkRefreshToken();
+  // console.log("refresh", refreshToken.status)
   return (
     accessToken ? <Outlet /> : <Navigate to='/' />
   )

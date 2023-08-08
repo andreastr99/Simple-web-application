@@ -96,7 +96,7 @@ function register(req, res) {
 // }
 
 function generateAccessToken(user) {
-    return jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
+    return jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '15m' });
 }
 
 function generateRefreshToken(user) {
@@ -152,9 +152,9 @@ function logout(req, res) {
 
 function refreshToken(req, res) {
     // const refreshToken = req.cookies.refreshToken; // If using cookies
-    const refreshToken = req.cookies['refreshToken'];
+    const refreshToken = req.cookies.refreshToken
+    console.log("refresh token ",refreshToken)
     // const refreshToken = req.body.refreshToken; // If using request body
-
     if (!refreshToken) {
         return res.status(401).json({ message: 'Refresh token not found' });
     }

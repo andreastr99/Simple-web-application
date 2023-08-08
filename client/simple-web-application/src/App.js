@@ -32,9 +32,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LoginPage/>} />
-          <Route element ={<ProtectedRoute/>}>
+          {/* <Route element ={<ProtectedRoute/>}> */}
             <Route element={<HomePage /> } path="/home" exact/>
-          </Route>
+          {/* </Route> */}
           <Route path="/register" element={ <RegisterPage/> } />
           <Route path="/forget-password" element={ <ForgetPasswordPage/> } />
         </Routes>
