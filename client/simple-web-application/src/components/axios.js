@@ -8,7 +8,8 @@ const axiosRequests = {
   addEmployee: (employee) => axiosInterceptor.post('/Employees', employee),
   editEmployee: (employee_id, employee) => axiosInterceptor.put(`/Employees/${employee_id}`, employee),
   getSkillLevels: () => axiosInterceptor.get('/skill-levels'),
-  getSkill: (skill_level_id) => axiosInterceptor.get(`/skill-level/${skill_level_id}`)
+  getSkill: (skill_level_id) => axiosInterceptor.get(`/skill-level/${skill_level_id}`),
+  checkRefreshToken: () => axiosInterceptor.get('/check_refresh_token')
 };
 
 export default axiosRequests;

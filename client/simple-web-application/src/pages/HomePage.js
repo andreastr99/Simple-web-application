@@ -98,7 +98,12 @@ export default function HomePage() {
         })
     } catch (error) {
       console.log(error);
-      navigate("/")
+      //  // Check if the error is due to a 401 status (Unauthorized)
+       if (error.response && error.response.status === 401) {
+        // Redirect to the login page
+        navigate('/');
+      }
+      // navigate("/")
     } finally {
       setLoading(false);
     }

@@ -54,14 +54,14 @@ api.interceptors.response.use(
     // Check if the error is due to an expired access token
     // if (error.response && error.response.status === 401 && !originalRequest._retry) {
       if ((!accessToken || error.response?.status === 401) && !originalRequest._retry) {
-      // originalRequest._retry = true;
+      originalRequest._retry = true;
 
       
       
-      if (!refreshToken) {
-        // If the refreshToken doesn't exist, return a 401 status code directly
-        return Promise.reject(error);
-      }
+      // if (!refreshToken) {
+      //   // If the refreshToken doesn't exist, return a 401 status code directly
+      //   return Promise.reject(error);
+      // }
       
       // Make a request to the server to get a new access token using the refresh token
       try {
@@ -76,7 +76,10 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         // Handle refresh token errors, e.g., redirect to login page
-        console.log('Refresh token error:', refreshError);
+        // console.log('Refresh token error:', refreshError);
+        console.error('Refresh token error:', refreshError);
+  // Add this line to log the full error object
+  console.log('Full error object:', refreshError);
         return Promise.reject(refreshError);
       }
     }
@@ -86,3 +89,78 @@ api.interceptors.response.use(
   }
 );
 export default api;
+
+// import axios from 'axios';
+
+// const axiosInstance = axios.create({
+//   baseURL: 'http://localhost:8081/api', // Replace with your API base URL
+//   timeout: 5000, // Adjust the timeout value as needed
+// });
+
+
+// async function refreshAccessToken() {
+//   try {
+//     const response = await axios.post('http://localhost:8081/api/refresh-token'); // Replace with your refresh token endpoint
+//     const newAccessToken = response.data.access_token;
+//     // Save the new access token to your cookie or local storage
+//     // Example: document.cookie = `access_token=${newAccessToken}; path=/; expires=...`;
+//     return newAccessToken;
+//   } catch (error) {
+//     // Handle any errors that occur during the token refresh process
+//     throw error;
+//   }
+// }
+
+
+// // // Request interceptor to add the access token to the request headers
+// // axiosInstance.interceptors.request.use(
+// //   (config) => {
+// //     const accessToken = getAccessTokenFromCookie(); // Implement this function to retrieve the access token from the cookie
+// //     if (accessToken) {
+// //       config.headers.Authorization = `Bearer ${accessToken}`;
+// //     }
+// //     return config;
+// //   },
+// //   (error) => {
+// //     return Promise.reject(error);
+// //   }
+// // );
+// // Request interceptor
+// axiosInstance.interceptors.request.use(
+//   (config) => {
+//     const token = localStorage.getItem('token');
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+// // Response interceptor to handle token expiration and refresh the token
+// axiosInstance.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   async (error) => {
+//     const originalRequest = error.config;
+//     if (error.response.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true;
+//       try {
+//         const newAccessToken = await refreshAccessToken();
+//         // Retry the original request with the new access token
+//         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+//         return axiosInstance(originalRequest);
+//       } catch (refreshError) {
+//         // Handle the refresh error, maybe log the user out or redirect to login page
+//         throw refreshError;
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );
+
+// export default axiosInstance
+

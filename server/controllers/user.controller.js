@@ -151,7 +151,8 @@ function logout(req, res) {
 
 
 function refreshToken(req, res) {
-    const refreshToken = req.cookies.refreshToken; // If using cookies
+    // const refreshToken = req.cookies.refreshToken; // If using cookies
+    const refreshToken = req.cookies['refreshToken'];
     // const refreshToken = req.body.refreshToken; // If using request body
 
     if (!refreshToken) {
@@ -177,10 +178,23 @@ function refreshToken(req, res) {
     }
 }
 
+function check_refresh_token (req, res) {
+    const refreshToken = req.cookies['refreshToken'];
+
+    if (refreshToken) {
+      // The refresh token exists in the cookie storage
+      res.status(200).json({ hasRefreshToken: true });
+    } else {
+      // The refresh token does not exist in the cookie storage
+      res.status(401).json({ hasRefreshToken: false });
+    }
+}
+
 
 module.exports = {
     register: register,
     login: login,
     logout: logout,
-    refreshToken: refreshToken
+    refreshToken: refreshToken,
+    check_refresh_token: check_refresh_token
 }
