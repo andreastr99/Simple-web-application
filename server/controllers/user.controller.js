@@ -142,9 +142,7 @@ function login(req, res) {
 }
 
 function logout(req, res) {
-
     res.clearCookie('refreshToken');
-
     // Send a success response
     res.status(200).json({ message: 'Logout successful' });
 };
@@ -153,16 +151,17 @@ function logout(req, res) {
 function refreshToken(req, res) {
     // const refreshToken = req.cookies.refreshToken; // If using cookies
     const refreshToken = req.cookies.refreshToken
-    console.log("refresh token ",refreshToken)
-    // const refreshToken = req.body.refreshToken; // If using request body
-    if (!refreshToken) {
-        return res.status(401).json({ message: 'Refresh token not found' });
-    }
-
     try {
         // Validate the refresh token
-        const decodedRefreshToken = jwt.verify(refreshToken, process.env.SECRET_KEY);
-
+        // const decodedRefreshToken = jwt.verify(refreshToken, process.env.SECRET_KEY);
+        let decodedRefreshToken
+        jwt.verify(refreshToken, process.env.SECRET_KEY, (err, user) => {
+            if (err) {
+                res.clearCookie('refreshToken');
+            }else{
+                decodedRefreshToken = user
+            }
+          });
         // Generate a new access token
         const user = {
             id: decodedRefreshToken.id,
@@ -176,11 +175,25 @@ function refreshToken(req, res) {
         // Handle token validation errors
         return res.status(401).json({ message: 'Invalid refresh token' });
     }
+
+    // const cookies = req.cookies;
+    // if(!cookies?.refreshToken){
+    //     return res.status(401)
+    // }
+    // console.log(cookies.refreshToken)
+
+    // const refreshToken = cookies.refreshToken;
 }
 
 function check_refresh_token (req, res) {
-    const refreshToken = req.cookies['refreshToken'];
+    const refreshToken = req.cookies.refreshToken;
 
+    jwt.verify(refreshToken, process.env.SECRET_KEY, (err, user) => {
+        if (err) {
+            res.clearCookie('refreshToken');
+        }
+      });
+      
     if (refreshToken) {
       // The refresh token exists in the cookie storage
       res.status(200).json({ hasRefreshToken: true });

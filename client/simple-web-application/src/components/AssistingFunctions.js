@@ -1,3 +1,5 @@
+import AxiosRequests from './axios';
+
 const today = new Date();
 
 // Variable to set the maximum date to today to prevent future dates from being selected
@@ -40,4 +42,12 @@ export const convertCheckboxToBoolean = (active) => {
 export const getSkill = (skill_level_id, skills) => {
   const matchedOption = skills.find(skill => skill.skill_level_id === skill_level_id);
   return matchedOption ? matchedOption.skill_name : null;
+}
+
+
+
+export function logout() {
+
+  localStorage.removeItem('token');
+  AxiosRequests.logout();
 }

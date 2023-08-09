@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import EmployeeModal from './EmployeeModal';
-import { formatDate, getSkill } from '../components/AssistingFunctions'
+import { formatDate, getSkill, logout} from '../components/AssistingFunctions'
 import AxiosRequests from '../components/axios';
 import AlertMessage from '../components/AlertMessage';
 
@@ -61,9 +61,10 @@ export default function HomePage() {
   // ---------------------------------------
 
   const handleLogout = () => {
-  
-    localStorage.removeItem('token');
-    AxiosRequests.logout().then(navigate("/"))
+    logout();
+    // localStorage.removeItem('token');
+    // AxiosRequests.logout().then(navigate("/"))
+    navigate("/")
     
   };
 
@@ -84,34 +85,39 @@ export default function HomePage() {
   const [data, setData] = useState([]);
   const [skillLevels, setSkillLevels] = useState([])
   const [loading, setLoading] = useState(false);
-  const fetchData = async () => {
-    try {
-
-      await AxiosRequests.getAllEmployees()
-        .then(res => {
-          setData(res.data);
-        });
-
-      await AxiosRequests.getSkillLevels()
-        .then(res => {
-          setSkillLevels(res.data)
-
-        })
-    } catch (error) {
-      console.log(error);
-      //  // Check if the error is due to a 401 status (Unauthorized)
-       if (error.response && error.response.status === 401) {
-        // Redirect to the login page
-        navigate('/');
-      }
-      // navigate("/")
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const controller = new AbortController();
+    const fetchData = async () => {
+      try {
+  
+        await AxiosRequests.getAllEmployees()
+          .then(res => {
+            setData(res.data);
+          });
+  
+        await AxiosRequests.getSkillLevels()
+          .then(res => {
+            setSkillLevels(res.data)
+  
+          })
+      } catch (error) {
+        console.log(error);
+        //  // Check if the error is due to a 401 status (Unauthorized)
+         if (error.response && error.response.status === 401) {
+          // Redirect to the login page
+          navigate('/');
+        }
+        // navigate("/")
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
+
+    return () =>{
+      controller.abort();
+    }
   }, []);
 
   if (loading) {

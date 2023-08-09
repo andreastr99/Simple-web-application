@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 function checkAuth(req, res, next) {
   try {
-
+ 
     // Check if the Authorization header is present
     if (!req.headers.authorization) {
       return res.status(401).json({ "message": "Authorization header missing" });
@@ -37,7 +37,27 @@ function checkAuth(req, res, next) {
     return res.status(500).json({ "message": "Internal server error" });
   }
 }
+// Middleware to check if the refresh token exists
+function checkRefreshToken(req, res, next) {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    return res.status(401).json({ "message": "Refresh token missing" });
+  }
+
+  jwt.verify(refreshToken, process.env.SECRET_KEY, (err, user) => {
+    if (err) {
+      return res.status(401).json({ "message": "Invalid token" });
+    }
+    // Token is valid, attach the decoded user information to req.user
+    req.user = user;
+    next();
+  });
+  // You can add more checks or validation for the refresh token here if needed
+
+  next();
+}
 
 module.exports = {
   checkAuth: checkAuth,
+  checkRefreshToken:checkRefreshToken
 }

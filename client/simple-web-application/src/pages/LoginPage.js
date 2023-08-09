@@ -36,6 +36,7 @@ export default function LoginPage() {
         try {
             await AxiosRequests.login(formattedValues)
             .then(res => {
+                console.log(res)
                 if (res.data.token) {
                     localStorage.setItem("token", res.data.token);
                     navigate("/home");
@@ -47,7 +48,7 @@ export default function LoginPage() {
             if (error.response && error.response.status === 401) {
                 setValidCredentials(false);
             } else {
-                console.error('An unexpected error occurred.');
+                console.error('An unexpected error occurred.', error);
             }
         }
     };

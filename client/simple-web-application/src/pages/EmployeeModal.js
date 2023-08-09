@@ -61,7 +61,8 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
     if (employee) {
       try {
         const res = await AxiosRequests.editEmployee(employee.employee_id, values);
-        setAlertState({ variant: 'success', show: true, message: 'Data saved successfully' });
+        // console.log("the res is", res.status)
+        setAlertState({ variant: 'success', show: true, message: 'Data saved successfully', statusCode: res.status });
         onEditEmployee(res.data);
       } catch (err) {
         setValues((prevData) => ({
@@ -74,6 +75,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
           active:  convertCheckboxToBoolean(employee.active),
           age: employee.age,
         }));
+
         setAlertState({ variant: 'danger', show: true, message: err.response.data.message, statusCode: err.response.request.status });
         console.error('Error updating employee:', err.response.request.status);
       }

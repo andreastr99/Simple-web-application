@@ -8,7 +8,6 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ForgetPasswordPage from './pages/ForgetPasswordPage'
 import ProtectedRoute from './components/ProtectedRoute';
-
 import './styles/App.css';
 
 // function App() {
