@@ -12,7 +12,7 @@ function getEmployees(req, res) {
 
     db.query('SELECT * FROM employees', (error, results) => {
         if (error) {
-            return res.status(500).json(error);
+            return res.status(400).json(error);
         } else
             return res.status(200).json(results);
         // handleDatabaseResponse(res, error, results);
