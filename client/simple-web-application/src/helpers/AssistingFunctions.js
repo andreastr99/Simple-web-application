@@ -1,4 +1,4 @@
-import AxiosRequests from './axios';
+import AxiosRequests from '../api/axios';
 
 const today = new Date();
 

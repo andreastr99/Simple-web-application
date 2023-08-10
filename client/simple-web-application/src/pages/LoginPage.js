@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AxiosRequests from '../components/axios';
+import AxiosRequests from '../api/axios';
 import login from '../assets/group.png';
 
 

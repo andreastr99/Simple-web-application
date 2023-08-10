@@ -1,5 +1,4 @@
 const db = require('../database/database');
-const { handleDatabaseResponse } = require('../helpers/utils')
 const Redis = require('redis')
 
 const redisClient = Redis.createClient(6379);
@@ -27,7 +26,6 @@ function getSkill(req, res) {
     const skill_level_id = req.params.skillId;
 
     db.query('SELECT skill_name FROM skill_levels WHERE skill_level_id = ?', [skill_level_id], (error, results) => {
-        // handleDatabaseResponse(res, error, results[0])
         if (error) {
             return res.status(500).json(error);
         } else

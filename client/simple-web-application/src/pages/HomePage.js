@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-import EmployeeModal from './EmployeeModal';
-import { logout } from '../components/AssistingFunctions'
-import AxiosRequests from '../components/axios';
+import EmployeeModal from '../components/EmployeeModal';
+import { logout } from '../helpers/AssistingFunctions'
+import AxiosRequests from '../api/axios';
 import AlertMessage from '../components/AlertMessage';
 import EmployeeTable from '../components/EmployeeTable';
 

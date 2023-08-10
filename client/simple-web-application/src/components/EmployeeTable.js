@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import EmployeeModal from '../pages/EmployeeModal';
-import { formatDate, getSkill } from './AssistingFunctions'
-import AxiosRequests from '../components/axios';
+import EmployeeModal from './EmployeeModal';
+import { formatDate, getSkill } from '../helpers/AssistingFunctions'
+import AxiosRequests from '../api/axios';
 
 
 const EmployeeTable = ({ data, setData, skillLevels, setAlertState }) => {

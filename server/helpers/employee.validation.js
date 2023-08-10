@@ -51,8 +51,22 @@ async function skillIdValidation(skill_level_id) {
   }
 }
 
+async function dataValidation (req) {
+  let isValid;
+  try {
+      isValid = await skillIdValidation(req.body.skill_level);
+   } catch (error) {
+     console.error("An error occurred:", error);
+   }
+   
+ if (!validation(req.body) || !isValid) {
+     return false;
+ }
+ return true;
+}
 
 module.exports = {
   validation: validation,
-  skillIdValidation: skillIdValidation
+  skillIdValidation: skillIdValidation,
+  dataValidation: dataValidation
 }

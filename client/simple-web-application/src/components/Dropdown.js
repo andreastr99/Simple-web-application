@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AxiosRequests from '../components/axios';
+import AxiosRequests from '../api/axios';
 
 const Dropdown = ({ onChange, required, data, currentValue }) => {
   const [options, setOptions] = useState([]);

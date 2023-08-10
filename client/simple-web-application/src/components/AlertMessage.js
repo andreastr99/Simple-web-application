@@ -8,7 +8,6 @@ const AlertMessage = ({ show, message, variant, statusCode, onClose }) => {
     if (show) {
       const timer = setTimeout(() => {
         if(statusCode === 401){
-          // window.location.reload();
           navigate('/')
           onClose();
         }

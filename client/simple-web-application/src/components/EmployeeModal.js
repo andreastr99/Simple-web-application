@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { calculateDate, calculateAge, minDate, formatDate, getSkill, convertCheckboxToBoolean } from '../components/AssistingFunctions'
-import AxiosRequests from '../components/axios';
+import { calculateDate, calculateAge, minDate, formatDate, getSkill, convertCheckboxToBoolean } from '../helpers/AssistingFunctions'
+import AxiosRequests from '../api/axios';
 
-import Dropdown from '../components/Dropdown';
+import Dropdown from './Dropdown';
 
 export default function Modal({ showModal, handleClose, setAlertState, employee, title, onAddEmployee, onEditEmployee, skillLevels}) {
 
@@ -40,8 +40,10 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
         age,
       });
       setSelectedSkillLevel(skill_level); // Set the selected skill level state
+    }else{
+      setValues(initialState)
     }
-  }, [employee]);
+  }, [employee, showModal]);
 
 
   const handleInputChange = (e) => {

@@ -5,8 +5,7 @@ const bcryptjs = require('bcryptjs');
 const uuid = require('uuid');
 const accessToken = require('../controllers/user.controller');
 
-const { validation, skillIdValidation } = require('../helpers/employee.validation')
-const { handleDatabaseResponse, dataValidation } = require('../helpers/utils')
+const { dataValidation } = require('../helpers/employee.validation')
 
 function getEmployees(req, res) {
 
@@ -15,28 +14,14 @@ function getEmployees(req, res) {
             return res.status(500).json(error);
         } else
             return res.status(200).json(results);
-        // handleDatabaseResponse(res, error, results);
+
     });
 }
 
 async function addEmployee(req, res) {
     const { first_name, last_name, dob, email, skill_level, active, age } = req.body;
 
-
-    // let isValid;
     
-    // try {
-    //      isValid = await skillIdValidation(skill_level);
-    //   } catch (error) {
-    //     // Handle the error here if needed
-    //     console.error("An error occurred:", error);
-    //   }
-  
-    // if (!validation(req.body) || isValid) {
-    //     return res.status(400).json({
-    //         "message": "Invalid employee details"
-    //     })
-    // }
     let isValid = await dataValidation(req);
 
     if (!isValid) {
@@ -44,6 +29,7 @@ async function addEmployee(req, res) {
             "message": "Invalid employee details"
         })
     }
+
     const employee_id = uuid.v4();
 
     db.query('SELECT employee_id, email FROM employees WHERE email = ?', [email], (error, result) => {
@@ -83,20 +69,6 @@ async function editEmployee(req, res) {
 
     const employee_id = req.params.EmployeeId;
 
-    // let isValid;
-
-    // try {
-    //     isValid = await skillIdValidation(skill_level);
-    // } catch (error) {
-    //     // Handle the error here if needed
-    //     console.error("An error occurred:", error);
-    // }
-
-    // if (!validation(req.body) || !isValid) {
-    //     return res.status(400).json({
-    //         "message": "Invalid employee details"
-    //     })
-    // }
     let isValid = await dataValidation(req);
     if (!isValid) {
         return res.status(400).json({
@@ -137,8 +109,7 @@ async function editEmployee(req, res) {
                                 return res.status(500).json(error)
                             } else {
                                 return res.status(200).json(updatedEmployee[0]);
-                            }
-                            // handleDatabaseResponse(res, error, updatedEmployee[0]);
+                            }            
                         })
                     }
 
@@ -152,11 +123,6 @@ async function editEmployee(req, res) {
 function deleteEmployee(req, res) {
     const employee_id = req.params.EmployeeId;
 
-    // db.query('SELECT * FROM employees WHERE employee_id = ?', [employee_id], (error, employeeFound) => {
-    //     if (error) {
-    //         res.status(500).json(error);
-    //     }
-    //     if (employeeFound.length > 0) {
     db.query('DELETE FROM employees WHERE employee_id = ?', [employee_id], (error, result) => {
         if (error) {
             res.status(500).json(error);
@@ -169,12 +135,6 @@ function deleteEmployee(req, res) {
         }
     });
 
-    //     } else {
-    //         res.status(401).json({
-    //             "message": "Invalid employee id"
-    //         });
-    //     }
-    // });
 }
 
 module.exports = {
