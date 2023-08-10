@@ -34,7 +34,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
    try{
-    await axios.get('http://localhost:8081/api/check_refresh_token', {withCredentials: true});
+    await axios.get('http://localhost:8081/api/check-refresh-token', {withCredentials: true});
     // await api.post('/refresh-token');
    } catch (refreshError) {
     // Handle refresh token errors, e.g., redirect to login page
@@ -45,7 +45,7 @@ api.interceptors.response.use(
   }
     if ((error.response?.status === 401) && !originalRequest._retry) {
       originalRequest._retry = true;
-      // logout();
+  
       // Make a request to the server to get a new access token using the refresh token
       try {
         const res = await api.post('/refresh-token');

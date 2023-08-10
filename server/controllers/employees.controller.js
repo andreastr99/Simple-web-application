@@ -5,7 +5,7 @@ const bcryptjs = require('bcryptjs');
 const uuid = require('uuid');
 const accessToken = require('../controllers/user.controller');
 
-const { dataValidation } = require('../helpers/employee.validation')
+const { dataValidation } = require('../helpers/utils')
 
 function getEmployees(req, res) {
 
@@ -21,10 +21,7 @@ function getEmployees(req, res) {
 async function addEmployee(req, res) {
     const { first_name, last_name, dob, email, skill_level, active, age } = req.body;
 
-    
-    let isValid = await dataValidation(req);
-
-    if (!isValid) {
+    if (!await dataValidation(req)) {
         return res.status(400).json({
             "message": "Invalid employee details"
         })
@@ -69,8 +66,7 @@ async function editEmployee(req, res) {
 
     const employee_id = req.params.EmployeeId;
 
-    let isValid = await dataValidation(req);
-    if (!isValid) {
+    if (!await dataValidation(req)) {
         return res.status(400).json({
             "message": "Invalid employee details"
         })

@@ -14,18 +14,10 @@ function calculateAge(birthdate) {
 
 
 function validation(employee) {
-  const first_name = employee.first_name;
-  const last_name = employee.last_name;
-  const dob = employee.dob;
-  const email = employee.email;
-  const active = employee.active;
-  const age = employee.age;
-  
-  
   const emailRegex = new RegExp("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
   const nameRegex = new RegExp("^([a-zA-Z]+[ \\-']{0,1}){1,3}$");
 
-  if ((nameRegex.test(first_name) && nameRegex.test(last_name)) && (calculateAge(dob) >= 18 && calculateAge(dob) <= 100) && emailRegex.test(email) && (active === true || active === false) && (age === calculateAge(dob))) {
+  if ((nameRegex.test(employee.first_name) && nameRegex.test(employee.last_name)) && (calculateAge(employee.dob) >= 18 && calculateAge(employee.dob) <= 100) && emailRegex.test(employee.email) && (employee.active === true || employee.active === false) && (employee.age === calculateAge(employee.dob))) {
     return true;
   }
   return false;
@@ -51,19 +43,15 @@ async function skillIdValidation(skill_level_id) {
   }
 }
 
-async function dataValidation (req) {
-  let isValid;
+async function dataValidation(req) {
   try {
-      isValid = await skillIdValidation(req.body.skill_level);
-   } catch (error) {
-     console.error("An error occurred:", error);
-   }
-   
- if (!validation(req.body) || !isValid) {
-     return false;
- }
- return true;
+      return (validation(req.body) && await skillIdValidation(req.body.skill_level));
+  } catch (error) {
+      console.error("An error occurred:", error);
+      return false;
+  }
 }
+
 
 module.exports = {
   validation: validation,

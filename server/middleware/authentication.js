@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-// const dotenv = require('dotenv');
 
 function checkAuth(req, res, next) {
   try {
@@ -29,7 +28,7 @@ function checkAuth(req, res, next) {
     return res.status(500).json({ "message": "Internal server error" });
   }
 }
-
+  
 module.exports = {
-  checkAuth: checkAuth,
+  checkAuth: checkAuth,  
 }

@@ -34,8 +34,7 @@ export default function HomePage() {
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
-  // -------------------------------------
-
+  
   const handleAddEmployee = (newEmployee) => {
     setData(prevData => [...prevData, newEmployee]);
   };

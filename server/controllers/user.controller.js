@@ -80,7 +80,6 @@ function login(req, res) {
 
 function logout(req, res) {
     res.clearCookie('refreshToken');
-    // Send a success response
     res.status(200).json({ message: 'Logout successful' });
 };
 
@@ -111,7 +110,7 @@ function refreshToken(req, res) {
     }
 }
 
-function check_refresh_token (req, res) {
+function checkRefreshToken (req, res) {
     const refreshToken = req.cookies.refreshToken;
 
     jwt.verify(refreshToken, process.env.SECRET_KEY, (err, user) => {
@@ -135,5 +134,5 @@ module.exports = {
     login: login,
     logout: logout,
     refreshToken: refreshToken,
-    check_refresh_token: check_refresh_token
+    checkRefreshToken: checkRefreshToken
 }
