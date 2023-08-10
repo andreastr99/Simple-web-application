@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import EmployeeModal from './EmployeeModal';
-import { formatDate, getSkill, logout} from '../components/AssistingFunctions'
+import { logout } from '../components/AssistingFunctions'
 import AxiosRequests from '../components/axios';
 import AlertMessage from '../components/AlertMessage';
-
+import EmployeeTable from '../components/EmployeeTable';
 
 export default function HomePage() {
-  
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+
   const navigate = useNavigate();
 
   // ----------- Alert Message -----------
@@ -37,24 +36,6 @@ export default function HomePage() {
   };
   // -------------------------------------
 
-  // --------------Edit Modal--------------
-  const [showEditModal, setShowEditModal] = useState(false);
-
-  const handleShowEditModal = (employee) => {
-    setSelectedEmployee(employee);
-    setShowEditModal(true);
-  };
-
-  const handleCloseEditModal = () => {
-    setShowEditModal(false);
-  };
-  // ---------------------------------------
-
-  // ---------------------------------------
-  const handleEditEmployee = (updatedEmployee) => {
-    setData(prevData => prevData.map(employee => (employee.employee_id === updatedEmployee.employee_id ? updatedEmployee : employee)));
-  };
-
   const handleAddEmployee = (newEmployee) => {
     setData(prevData => [...prevData, newEmployee]);
   };
@@ -62,24 +43,10 @@ export default function HomePage() {
 
   const handleLogout = () => {
     logout();
-    // localStorage.removeItem('token');
-    // AxiosRequests.logout().then(navigate("/"))
     navigate("/")
     
   };
 
-  const handleDelete = (employee_id) => {
-    console.log(employee_id);
-
-    AxiosRequests.deleteEmployee(employee_id)
-      .then(res => {
-        setAlertState({ variant: 'success', show: true, message: res.data.message, statusCode: 200 })
-        setData(prevData => prevData.filter(employee => employee.employee_id !== employee_id));
-      })
-      .catch(function (err) {
-        setAlertState({ variant: 'danger', show: true, message: err.response.data.message, statusCode: err.response.request.status })
-      })
-  }
   
   // ----------- When login functionality -----------
   const [data, setData] = useState([]);
@@ -108,7 +75,6 @@ export default function HomePage() {
           // Redirect to the login page
           navigate('/');
         }
-        // navigate("/")
       } finally {
         setLoading(false);
       }
@@ -155,49 +121,7 @@ export default function HomePage() {
           <div className="table-responsive">
             <div>
               {data.length > 0 ? (
-                // Render the table when data is available
-                <table className="table table-hover" >
-                  <thead>
-                    <tr>
-                      {/* <th>ID</th> */}
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Date of Birth</th>
-                      <th>Email</th>
-                      <th>Skill level</th>
-                      <th>Active</th>
-                      <th>Age</th>
-                      <th style={{ "textAlign": "center" }}>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((employee) => {
-                      return <tr key={employee.employee_id}>
-                        {/* <td>{employee.employee_id}</td> */}
-                        <td>{employee.first_name}</td>
-                        <td>{employee.last_name}</td>
-                        <td>{formatDate(employee.dob)}</td>
-                        <td>{employee.email}</td>
-                        {/* <td>{console.log(getSkill(employee.skill_level))}</td> */}
-                        <td>{getSkill(employee.skill_level, skillLevels)}</td>
-                        {/* <td>{console.log(skillLevels)}</td> */}
-                        <td style={{ "textAlign": "center" }}>
-                          {(employee.active) ? (
-                            <span className="text-success ">&#x2713;</span>
-                          ) : (
-                            <span className="text-danger">&#x2717;</span>
-                          )}
-                        </td>
-                        <td>{employee.age}</td>
-                        <td>
-                          <button onClick={() => handleShowEditModal(employee)} className="btn btn-sm btn-primary mx-2">Edit</button>
-                          <EmployeeModal showModal={showEditModal} handleClose={handleCloseEditModal} setAlertState={setAlertState} employee={selectedEmployee} title={"Edit Employee"} onEditEmployee={handleEditEmployee} skillLevels={skillLevels} />
-                          <button onClick={() => handleDelete(employee.employee_id)} className="btn btn-sm btn-danger">Delete</button>
-                        </td>
-                      </tr>
-                    })}
-                  </tbody>
-                </table>
+                <EmployeeTable data={data} skillLevels={skillLevels} setAlertState={setAlertState} setData={setData}/>
               ) : (
                 // Show a message when data is not available
                 <p>No data available.</p>

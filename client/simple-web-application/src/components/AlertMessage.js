@@ -4,14 +4,12 @@ import { useNavigate } from 'react-router-dom'
 
 const AlertMessage = ({ show, message, variant, statusCode, onClose }) => {
   const navigate = useNavigate();
-  const [msg, setMsg] = useState(message);
   useEffect(() => {
     if (show) {
       const timer = setTimeout(() => {
         if(statusCode === 401){
           // window.location.reload();
           navigate('/')
-          setMsg('Unauthorized')
           onClose();
         }
         onClose();
@@ -25,7 +23,7 @@ const AlertMessage = ({ show, message, variant, statusCode, onClose }) => {
     <div className="d-flex justify-content-start">
       {show && (
         <Alert variant={variant}>
-          {msg}
+          {message ? message : 'Unauthorized'}
         </Alert>
       )}
     </div>
