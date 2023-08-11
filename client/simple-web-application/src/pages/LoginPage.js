@@ -4,22 +4,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AxiosRequests from '../api/axios';
 import login from '../assets/group.png';
 
-
-// Για να πάρουμε ό,τι δίνει ο χρήστης στο email και password
-// input χρησιμοποιούμε το useState hook απο την React
 export default function LoginPage() {
     //used for navigation through pages
     const navigate = useNavigate();
 
-    //if the users have the wrong cred an error message popsup to the screen
     const [validCredentials, setValidCredentials] = useState(true);
-    //users credentials
+  
     const [values, setValues] = useState({
         username: '',
         password: ''
-    });
-
-    
+    }); 
 
     const handleInputChange = (e) => {
         setValues(prevData => ({ ...prevData, [e.target.name]: [e.target.value] }))
@@ -36,11 +30,9 @@ export default function LoginPage() {
         try {
             await AxiosRequests.login(formattedValues)
             .then(res => {
-                console.log(res)
                 if (res.data.token) {
                     localStorage.setItem("token", res.data.token);
                     navigate("/home");
-                    // window.location.reload();
                 }
             });
            
@@ -48,7 +40,8 @@ export default function LoginPage() {
             if (error.response && error.response.status === 401) {
                 setValidCredentials(false);
             } else {
-                console.error('An unexpected error occurred.', error);
+                alert(error.message)
+                console.error('An unexpected error occurred.', error.message);
             }
         }
     };
