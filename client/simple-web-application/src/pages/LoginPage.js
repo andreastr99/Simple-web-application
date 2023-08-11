@@ -1,19 +1,27 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
+import AuthContext from '../helpers/AuthProvider';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AxiosRequests from '../api/axios';
 import login from '../assets/group.png';
 
 export default function LoginPage() {
-    //used for navigation through pages
+
+    const { auth, setAuth } = useContext(AuthContext)
+
     const navigate = useNavigate();
 
-    const [validCredentials, setValidCredentials] = useState(true);
-  
     const [values, setValues] = useState({
         username: '',
         password: ''
-    }); 
+    });
+
+    const errRef = useRef();
+    const [errMsg, setErrMsg] = useState('');
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [values])
 
     const handleInputChange = (e) => {
         setValues(prevData => ({ ...prevData, [e.target.name]: [e.target.value] }))
@@ -21,7 +29,6 @@ export default function LoginPage() {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
         const formattedValues = {
             username: `${values.username}`,
             password: `${values.password}`
@@ -29,20 +36,25 @@ export default function LoginPage() {
 
         try {
             await AxiosRequests.login(formattedValues)
-            .then(res => {
-                if (res.data.token) {
-                    localStorage.setItem("token", res.data.token);
-                    navigate("/home");
-                }
-            });
-           
+                .then(res => {
+                    if (res.data.token) {
+                        localStorage.setItem("token", res?.data?.token);
+                        setAuth(true)
+                        navigate("/home");
+                    }
+                });
         } catch (error) {
-            if (error.response && error.response.status === 401) {
-                setValidCredentials(false);
+            if (!error?.response) {
+                setErrMsg('No Server Response')
+            } else if (error.response?.status === 400) {
+                setErrMsg('Missing Username or Password')
+            } else if (error.response?.status === 401) {
+                setErrMsg('Wrong email or password')
             } else {
-                alert(error.message)
+                setErrMsg('Login Failed')
                 console.error('An unexpected error occurred.', error.message);
             }
+            errRef.current.focus();
         }
     };
 
@@ -72,7 +84,7 @@ export default function LoginPage() {
                                         </div>
 
                                         <div className="text-center">
-                                            {!validCredentials && <p style={{ "color": "red" }}>Wrong username or password</p>}
+                                            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live='assertive' style={{ "color": "red" }}>{errMsg}</p>
                                         </div>
 
                                         <div className="d-grid gap-2 mb-5">

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../helpers/AssistingFunctions'
 import AxiosRequests from '../api/axios';
 import AlertMessage from '../components/AlertMessage';
 import EmployeeTable from '../components/EmployeeTable';
+import AuthContext from '../helpers/AuthProvider';
 
 export default function HomePage() {
-
   const navigate = useNavigate();
 
   // ----------- Alert Message -----------
@@ -23,6 +23,7 @@ export default function HomePage() {
   // -------------------------------------
 
   const handleLogout = () => {
+    setAuth(false)
     logout();
     navigate("/")
 
@@ -32,14 +33,16 @@ export default function HomePage() {
   const [data, setData] = useState([]);
   const [skillLevels, setSkillLevels] = useState([])
   const [loading, setLoading] = useState(false);
-
+const { auth, setAuth } = useContext(AuthContext)
   useEffect(() => {
     const controller = new AbortController();
+    if(auth){
     const fetchData = async () => {
       try {
         await AxiosRequests.getAllEmployees()
           .then(res => {
             setData(res.data);
+            setAuth(true)
           });
 
         await AxiosRequests.getSkillLevels()
@@ -50,7 +53,7 @@ export default function HomePage() {
       } catch (error) {
         console.log(error);
         //  // Check if the error is due to a 401 status (Unauthorized)
-        if (error.response ) {
+        if (error.response) {
           // Redirect to the login page
           navigate('/');
         }
@@ -58,10 +61,12 @@ export default function HomePage() {
         setLoading(false);
       }
     };
+    
     fetchData();
-
+  }
     return () => {
       controller.abort();
+      navigate('/')
     }
   }, []);
 

@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ForgetPasswordPage from './pages/ForgetPasswordPage'
+import ProtectedRoute from './helpers/ProtectedRoute';
 import './styles/App.css';
 
 function App() {
@@ -15,7 +16,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route element={<HomePage />} path="/home" exact />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<HomePage />} path="/home" exact />
+        </Route>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
       </Routes>

@@ -43,6 +43,9 @@ function generateRefreshToken(user) {
 function login(req, res) {
     const { username, password } = req.body;
 
+    if (username === '' || password === '') {
+        return res.status(400).json({ message: "Missing username or password" })
+    }
     db.query('SELECT id, username, password FROM users WHERE username = ?', [username], (error, results) => {
         if (error) {
             return res.status(500).json(error);
@@ -91,10 +94,10 @@ function refreshToken(req, res) {
         jwt.verify(refreshToken, process.env.SECRET_KEY, (err, user) => {
             if (err) {
                 res.clearCookie('refreshToken');
-            }else{
+            } else {
                 decodedRefreshToken = user
             }
-          });
+        });
         // Generate a new access token
         const user = {
             id: decodedRefreshToken.id,
@@ -110,21 +113,21 @@ function refreshToken(req, res) {
     }
 }
 
-function checkRefreshToken (req, res) {
+function checkRefreshToken(req, res) {
     const refreshToken = req.cookies.refreshToken;
 
     jwt.verify(refreshToken, process.env.SECRET_KEY, (err, user) => {
         if (err) {
             res.clearCookie('refreshToken');
         }
-      });
-      
+    });
+
     if (refreshToken) {
-      // The refresh token exists in the cookie storage
-      res.status(200).json({ hasRefreshToken: true });
+        // The refresh token exists in the cookie storage
+        res.status(200).json({ hasRefreshToken: true });
     } else {
-      // The refresh token does not exist in the cookie storage
-      res.status(401).json({ hasRefreshToken: false });
+        // The refresh token does not exist in the cookie storage
+        res.status(401).json({ hasRefreshToken: false });
     }
 }
 
