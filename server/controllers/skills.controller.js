@@ -1,7 +1,7 @@
 const db = require('../database/database');
 const Redis = require('redis')
 
-const redisClient = Redis.createClient(6379);
+const redisClient = Redis.createClient();
 redisClient.connect();
 
 async function getAllSkills(req, res) {
@@ -10,7 +10,7 @@ async function getAllSkills(req, res) {
         const results = JSON.parse(redisResult);
         return res.status(200).json(results);
     } else {
-        db.query('SELECT skill_level_id, skill_name FROM skill_levels', async (error, results) => {
+        db.query('SELECT * FROM skill_levels', async (error, results) => {
             if (error) {
                 return res.status(500).json(error);
             } else {
@@ -22,18 +22,18 @@ async function getAllSkills(req, res) {
     }
 }
 
-function getSkill(req, res) {
-    const skill_level_id = req.params.skillId;
+// function getSkill(req, res) {
+//     const skill_level_id = req.params.skillId;
 
-    db.query('SELECT skill_name FROM skill_levels WHERE skill_level_id = ?', [skill_level_id], (error, results) => {
-        if (error) {
-            return res.status(500).json(error);
-        } else
-            return res.status(200).json(results[0]);
-    });
-}
+//     db.query('SELECT skill_name FROM skill_levels WHERE skill_level_id = ?', [skill_level_id], (error, results) => {
+//         if (error) {
+//             return res.status(500).json(error);
+//         } else
+//             return res.status(200).json(results[0]);
+//     });
+// }
 
 module.exports = {
     getAllSkills: getAllSkills,
-    getSkill: getSkill
+    // getSkill: getSkill
 }

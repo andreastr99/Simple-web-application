@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import EmployeeModal from './EmployeeModal';
-import { formatDate, getSkill } from '../helpers/AssistingFunctions'
+import { formatDate, getSkill, getSkillDescription } from '../helpers/AssistingFunctions'
 import AxiosRequests from '../api/axios';
 
 
@@ -61,7 +61,7 @@ const EmployeeTable = ({ data, setData, skillLevels, setAlertState }) => {
                     <thead>
                         <tr>
                             {/* <th>ID</th> */}
-                            <th>First Name</th>
+                            <th title="First Name">First Name</th>
                             <th>Last Name</th>
                             <th>Date of Birth</th>
                             <th>Email</th>
@@ -79,7 +79,7 @@ const EmployeeTable = ({ data, setData, skillLevels, setAlertState }) => {
                                 <td>{employee.last_name}</td>
                                 <td>{formatDate(employee.dob)}</td>
                                 <td>{employee.email}</td>
-                                <td>{getSkill(employee.skill_level, skillLevels)}</td>
+                                <td className="hoverable-cell" data-details={`${getSkillDescription(employee.skill_level, skillLevels)}`}>{getSkill(employee.skill_level, skillLevels)}</td>
                                 <td style={{ "textAlign": "center" }}>
                                     {(employee.active) ? (
                                         <span className="text-success ">&#x2713;</span>

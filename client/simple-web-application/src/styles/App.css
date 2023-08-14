@@ -90,3 +90,24 @@
 .custom-right-padding{
   padding-right: 20px;
 }
+
+/* ------------------Cell Hover------------------ */
+.hoverable-cell {
+  position: relative;
+}
+
+.hoverable-cell::before {
+  content: attr(data-details);
+  position: absolute;
+  top: -30px; /* Adjust this value to control the tooltip position */
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+  display: none;
+}
+
+.hoverable-cell:hover::before {
+  display: block;
+}

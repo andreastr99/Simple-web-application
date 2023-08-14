@@ -3,7 +3,7 @@ import { calculateDate, calculateAge, minDate, formatDate, getSkill, convertChec
 import AxiosRequests from '../api/axios';
 import AuthContext from '../helpers/AuthProvider';
 import Dropdown from './Dropdown';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Modal({ showModal, handleClose, setAlertState, employee, title, onAddEmployee, onEditEmployee, skillLevels}) {
   const { auth, setAuth } = useContext(AuthContext)

@@ -44,6 +44,11 @@ export const getSkill = (skill_level_id, skills) => {
   return matchedOption ? matchedOption.skill_name : null;
 }
 
+export const getSkillDescription = (skill_level_id, skills) => {
+  const matchedOption = skills.find(skill => skill.skill_level_id === skill_level_id);
+  return matchedOption ? matchedOption.skill_description : null;
+}
+
 export function logout() {
   localStorage.removeItem('token');
   AxiosRequests.logout();

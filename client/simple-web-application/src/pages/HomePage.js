@@ -50,7 +50,6 @@ export default function HomePage() {
           await AxiosRequests.getSkillLevels()
             .then(res => {
               setSkillLevels(res.data)
-
             })
         } catch (error) {
           // Check if the error is due to a 401 status (Unauthorized)
