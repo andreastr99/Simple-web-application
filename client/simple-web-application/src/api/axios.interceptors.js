@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { logout } from '../helpers/AssistingFunctions';
+// import { logout } from '../helpers/AssistingFunctions';
 
 const API_BASE_URL = 'http://localhost:8081/api';
 
@@ -35,12 +35,12 @@ api.interceptors.response.use(
     const originalRequest = error.config;
    try{
     await axios.get('http://localhost:8081/api/check-refresh-token', {withCredentials: true});
-    // await api.post('/refresh-token');
    } catch (refreshError) {
     // Handle refresh token errors, e.g., redirect to login page
-    console.log('Refresh_token error:', refreshError);
+    console.log('Refresh token error:', refreshError);
 
-    logout();
+    // logout();
+    localStorage.removeItem('token');
     return Promise.reject(refreshError);
   }
     if ((error.response?.status === 401) && !originalRequest._retry) {
@@ -50,7 +50,7 @@ api.interceptors.response.use(
       try {
         const res = await api.post('/refresh-token');
         const newAccessToken = res.data.token;
-        console.log("cookie", res.request.status)
+        // console.log("cookie", res.request.status)
         // Update the access token in localStorage
         localStorage.setItem('token', newAccessToken);
 
@@ -61,7 +61,7 @@ api.interceptors.response.use(
         // Handle refresh token errors, e.g., redirect to login page
         console.log('Refresh token error:', refreshError);
 
-        logout();
+        // logout();
         return Promise.reject(refreshError);
       }
     }

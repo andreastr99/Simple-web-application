@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { calculateDate, calculateAge, minDate, formatDate, getSkill, convertCheckboxToBoolean } from '../helpers/AssistingFunctions'
 import AxiosRequests from '../api/axios';
-
+import AuthContext from '../helpers/AuthProvider';
 import Dropdown from './Dropdown';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Modal({ showModal, handleClose, setAlertState, employee, title, onAddEmployee, onEditEmployee, skillLevels}) {
+  const { auth, setAuth } = useContext(AuthContext)
+  const navigate = useNavigate();
+  useEffect(() =>{
+    if(!auth)
+      navigate('/');
+  }, [auth])
 
   const initialState = {
     employee_id: '',
@@ -80,6 +87,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
 
         setAlertState({ variant: 'danger', show: true, message: err.response.data.message, statusCode: err.response.request.status });
         console.error('Error updating employee:', err.response.request.status);
+        setAuth(false)
       }
     } else {
       try {      
@@ -94,6 +102,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
       } catch (err) {
         setAlertState({ variant: 'danger', show: true, message: err.response?.data?.message || 'Error adding employee', statusCode: err.response.request.status });
         console.error('Error adding employee:', err.response?.data?.message || err.message);
+        setAuth(false)
       }
       setValues(initialState);
       setSelectedSkillLevel('');

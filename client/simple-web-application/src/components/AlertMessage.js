@@ -7,10 +7,10 @@ const AlertMessage = ({ show, message, variant, statusCode, onClose }) => {
   useEffect(() => {
     if (show) {
       const timer = setTimeout(() => {
-        if(statusCode === 401){
-          navigate('/')
-          onClose();
-        }
+        // if(statusCode === 401){
+        //   // navigate('/')
+        //   onClose();
+        // }
         onClose();
       }, 2000);
 

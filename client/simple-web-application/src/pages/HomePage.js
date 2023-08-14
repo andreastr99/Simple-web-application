@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../helpers/AssistingFunctions'
+// import { logout } from '../helpers/AssistingFunctions'
 import AxiosRequests from '../api/axios';
 import AlertMessage from '../components/AlertMessage';
 import EmployeeTable from '../components/EmployeeTable';
@@ -22,10 +22,12 @@ export default function HomePage() {
   };
   // -------------------------------------
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     setAuth(false)
-    logout();
-    navigate("/")
+    // await logout();
+    localStorage.removeItem('token');
+    await AxiosRequests.logout();
+    // navigate("/")
 
   };
 
@@ -33,42 +35,47 @@ export default function HomePage() {
   const [data, setData] = useState([]);
   const [skillLevels, setSkillLevels] = useState([])
   const [loading, setLoading] = useState(false);
-const { auth, setAuth } = useContext(AuthContext)
+  const { auth, setAuth } = useContext(AuthContext)
+
   useEffect(() => {
     const controller = new AbortController();
-    if(auth){
-    const fetchData = async () => {
-      try {
-        await AxiosRequests.getAllEmployees()
-          .then(res => {
-            setData(res.data);
-            setAuth(true)
-          });
+    if (auth) {
+      const fetchData = async () => {
+        try {
+          await AxiosRequests.getAllEmployees()
+            .then(res => {
+              setData(res.data);
+            });
 
-        await AxiosRequests.getSkillLevels()
-          .then(res => {
-            setSkillLevels(res.data)
+          await AxiosRequests.getSkillLevels()
+            .then(res => {
+              setSkillLevels(res.data)
 
-          })
-      } catch (error) {
-        console.log(error);
-        //  // Check if the error is due to a 401 status (Unauthorized)
-        if (error.response) {
-          // Redirect to the login page
-          navigate('/');
+            })
+        } catch (error) {
+          // Check if the error is due to a 401 status (Unauthorized)
+          if (error.response) {
+            // Redirect to the login page
+            setAuth(false)
+            // navigate('/');
+          }
+        } finally {
+          setLoading(false);
         }
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchData();
-  }
+      };
+
+      fetchData();
+    }
     return () => {
       controller.abort();
       navigate('/')
     }
   }, []);
+
+  useEffect(() =>{
+    if(!auth)
+      navigate('/');
+  }, [auth])
 
   if (loading) {
     return <p>Loading...</p>;
@@ -100,7 +107,7 @@ const { auth, setAuth } = useContext(AuthContext)
           <h2 className="mb-5 mt-3">User Management</h2>
           <div>
             {data.length > 0 ? (
-              <EmployeeTable data={data} setData={setData} skillLevels={skillLevels} setAlertState={setAlertState}/>
+              <EmployeeTable data={data} setData={setData} skillLevels={skillLevels} setAlertState={setAlertState} />
             ) : (
               // Show a message when data is not available
               <p>No data available.</p>

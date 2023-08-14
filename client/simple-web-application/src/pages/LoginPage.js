@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AxiosRequests from '../api/axios';
 import login from '../assets/group.png';
+import axios from 'axios';
 
 export default function LoginPage() {
 
@@ -20,8 +21,27 @@ export default function LoginPage() {
     const [errMsg, setErrMsg] = useState('');
 
     useEffect(() => {
+        // console.log("auth var is", auth)
         setErrMsg('');
     }, [values])
+
+
+    useEffect(() => {
+        const hasRefreshToken = async () => {
+            try {
+                await axios.get('http://localhost:8081/api/check-refresh-token', { withCredentials: true })
+                    .then(res => {
+                        if (res.status === 200) {
+                            // setAuth(true)
+                            navigate("/home");
+                        }
+                    })
+            } catch (error) {
+                setAuth(false)
+            }
+        }
+        hasRefreshToken();
+    }, [])
 
     const handleInputChange = (e) => {
         setValues(prevData => ({ ...prevData, [e.target.name]: [e.target.value] }))
