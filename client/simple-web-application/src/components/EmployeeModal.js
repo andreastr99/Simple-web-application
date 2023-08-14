@@ -5,11 +5,11 @@ import AuthContext from '../helpers/AuthProvider';
 import Dropdown from './Dropdown';
 import { useNavigate } from 'react-router-dom';
 
-export default function Modal({ showModal, handleClose, setAlertState, employee, title, onAddEmployee, onEditEmployee, skillLevels}) {
+function Modal({ showModal, handleClose, setAlertState, employee, title, onAddEmployee, onEditEmployee, skillLevels }) {
   const { auth, setAuth } = useContext(AuthContext)
   const navigate = useNavigate();
-  useEffect(() =>{
-    if(!auth)
+  useEffect(() => {
+    if (!auth)
       navigate('/');
   }, [auth])
 
@@ -47,7 +47,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
         age,
       });
       setSelectedSkillLevel(skill_level); // Set the selected skill level state
-    }else{
+    } else {
       setValues(initialState)
     }
   }, [employee, showModal]);
@@ -81,7 +81,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
           dob: formatDate(employee.dob),
           email: employee.email,
           skill_level: getSkill(employee.skill_level, skillLevels),
-          active:  convertCheckboxToBoolean(employee.active),
+          active: convertCheckboxToBoolean(employee.active),
           age: employee.age,
         }));
 
@@ -90,8 +90,8 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
         setAuth(false)
       }
     } else {
-      try {      
-        const res = await AxiosRequests.addEmployee(values);     
+      try {
+        const res = await AxiosRequests.addEmployee(values);
         const newState = {
           ...values,
           employee_id: res.data.employee_id,
@@ -155,7 +155,7 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
               </div>
 
               {/* Dropdown Menu */}
-              <Dropdown onChange={handleDropdownChange} data={skillLevels} currentValue={selectedSkillLevel} required/>
+              <Dropdown onChange={handleDropdownChange} data={skillLevels} currentValue={selectedSkillLevel} required />
 
 
               {/* Boolean */}
@@ -183,3 +183,5 @@ export default function Modal({ showModal, handleClose, setAlertState, employee,
     </div>
   );
 };
+
+export default Modal

@@ -22,7 +22,7 @@ export default function HomePage() {
   };
   // -------------------------------------
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     setAuth(false)
     // await logout();
     localStorage.removeItem('token');
@@ -71,8 +71,8 @@ export default function HomePage() {
     }
   }, []);
 
-  useEffect(() =>{
-    if(!auth)
+  useEffect(() => {
+    if (!auth)
       navigate('/');
   }, [auth])
 

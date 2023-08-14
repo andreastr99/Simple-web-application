@@ -3,8 +3,8 @@ import { useContext, useEffect } from 'react';
 import AuthContext from './AuthProvider';
 
 const ProtectedRoute = () => {
-    const { auth } = useContext(AuthContext)
-    
+  const { auth } = useContext(AuthContext)
+
   return (
     auth ? <Outlet /> : <Navigate to='/' />
   )
