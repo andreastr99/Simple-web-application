@@ -8,6 +8,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ForgetPasswordPage from './pages/ForgetPasswordPage'
 import ProtectedRoute from './helpers/ProtectedRoute';
+import NotFoundPage from './pages/NotFoundPage';
+
 import './styles/App.css';
 
 function App() {
@@ -21,6 +23,7 @@ function App() {
         </Route>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
+        <Route path='*' element={<NotFoundPage/>}/>
       </Routes>
     </Router>
   );

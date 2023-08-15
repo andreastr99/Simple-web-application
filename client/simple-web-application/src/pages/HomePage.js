@@ -24,11 +24,8 @@ export default function HomePage() {
 
   const handleLogout = async () => {
     setAuth(false)
-    // await logout();
     localStorage.removeItem('token');
     await AxiosRequests.logout();
-    // navigate("/")
-
   };
 
   // ----------- When login functionality -----------

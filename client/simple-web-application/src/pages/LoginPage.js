@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export default function LoginPage() {
 
-    const { auth, setAuth } = useContext(AuthContext)
+    const { setAuth } = useContext(AuthContext)
 
     const navigate = useNavigate();
 
@@ -21,7 +21,6 @@ export default function LoginPage() {
     const [errMsg, setErrMsg] = useState('');
 
     useEffect(() => {
-        // console.log("auth var is", auth)
         setErrMsg('');
     }, [values])
 
