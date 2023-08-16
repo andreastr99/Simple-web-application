@@ -5,6 +5,7 @@ import AuthContext from './AuthProvider';
 const ProtectedRoute = () => {
   const { auth } = useContext(AuthContext)
 
+  console.log("auth", auth)
   return (
     auth ? <Outlet /> : <Navigate to='/' />
   )

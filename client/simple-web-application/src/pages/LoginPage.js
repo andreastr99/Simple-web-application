@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export default function LoginPage() {
 
-    const { setAuth } = useContext(AuthContext)
+    const { auth, setAuth } = useContext(AuthContext)
 
     const navigate = useNavigate();
 

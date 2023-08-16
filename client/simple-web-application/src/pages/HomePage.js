@@ -26,6 +26,7 @@ export default function HomePage() {
     setAuth(false)
     localStorage.removeItem('token');
     await AxiosRequests.logout();
+    navigate('/')
   };
 
   // ----------- When login functionality -----------
@@ -36,42 +37,45 @@ export default function HomePage() {
 
   useEffect(() => {
     const controller = new AbortController();
-    if (auth) {
-      const fetchData = async () => {
-        try {
-          await AxiosRequests.getAllEmployees()
-            .then(res => {
-              setData(res.data);
-            });
 
-          await AxiosRequests.getSkillLevels()
-            .then(res => {
-              setSkillLevels(res.data)
-            })
-        } catch (error) {
-          // Check if the error is due to a 401 status (Unauthorized)
-          if (error.response) {
-            // Redirect to the login page
-            setAuth(false)
-            // navigate('/');
-          }
-        } finally {
-          setLoading(false);
+    const fetchData = async () => {
+      try {
+        await AxiosRequests.getAllEmployees()
+          .then(res => {
+            // setAuth(true)
+            setData(res.data);
+          });
+
+        await AxiosRequests.getSkillLevels()
+          .then(res => {
+            setSkillLevels(res.data)
+          })
+      } catch (error) {
+        // Check if the error is due to a 401 status (Unauthorized)
+        if (error.response) {
+          // Redirect to the login page
+          setAuth(false)
+          navigate('/');
         }
-      };
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchData();
-    }
+
+    fetchData();
+  
     return () => {
       controller.abort();
-      navigate('/')
+      // navigate('/')
     }
-  }, []);
+  }, [auth]);
 
-  useEffect(() => {
-    if (!auth)
-      navigate('/');
-  }, [auth])
+  // useEffect(() => {
+  //   if (!auth) {
+  //     navigate('/');
+  //   }
+  // }, [auth])
 
   if (loading) {
     return <p>Loading...</p>;
