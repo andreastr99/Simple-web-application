@@ -86,7 +86,7 @@ export default function LoginPage() {
                             <div className="card border-radius shadow" style={{ "background": "#f1f7fe", "maxWidth": "450px", "margin": "auto" }}>
                                 <div className="card-body p-4">
                                     <div className="text-center">
-                                        <img src={login} alt="login" style={{ width: "120px" }} className="mb-2" />
+                                        <img src={login} alt="login" style={{ width: "120px", height: "120px" }} className="mb-2" />
                                         <h2 className="text-uppercase text-center mb-3">Login</h2>
                                     </div>
 

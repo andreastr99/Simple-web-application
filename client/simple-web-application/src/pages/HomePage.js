@@ -104,7 +104,7 @@ export default function HomePage() {
 
         {/* Users Table */}
         <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <h2 className="mb-5 mt-3">User Management</h2>
+          <h3 className="mb-5 mt-3" style={{  "display": "inline-block",  "width": "auto" }}>User Management</h3>
           <div>
             {data.length > 0 ? (
               <EmployeeTable data={data} setData={setData} skillLevels={skillLevels} setAlertState={setAlertState} />
