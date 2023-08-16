@@ -30,6 +30,8 @@ const skillRoute = require('./routes/skills')
 app.use("/api", employeesRoute);
 app.use("/api", userRoute);
 app.use("/api", skillRoute);
-
+app.use('*', function(req, res){
+  res.status(404).send("Sorry, we can't find that!");
+});
 
 module.exports = app;
