@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export default function LoginPage() {
 
-    const { auth, setAuth } = useContext(AuthContext)
+    // const { auth, setAuth } = useContext(AuthContext)
 
     const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ export default function LoginPage() {
                         }
                     })
             } catch (error) {
-                setAuth(false)
+                // setAuth(false)
             }
         }
         hasRefreshToken();
@@ -58,7 +58,7 @@ export default function LoginPage() {
                 .then(res => {
                     if (res.data.token) {
                         localStorage.setItem("token", res?.data?.token);
-                        setAuth(true)
+                        // setAuth(true)
                         navigate("/home");
                     }
                 });

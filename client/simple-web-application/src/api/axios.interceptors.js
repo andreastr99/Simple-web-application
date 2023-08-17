@@ -1,5 +1,4 @@
 import axios from 'axios';
-// import { logout } from '../helpers/AssistingFunctions';
 
 const API_BASE_URL = 'http://localhost:8081/api';
 
@@ -38,8 +37,6 @@ api.interceptors.response.use(
    } catch (refreshError) {
     // Handle refresh token errors, e.g., redirect to login page
     console.log('Refresh token error:', refreshError);
-
-    // logout();
     localStorage.removeItem('token');
     return Promise.reject(refreshError);
   }

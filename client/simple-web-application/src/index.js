@@ -4,4 +4,5 @@ import './index.css';
 import App from './App';
 import { AuthProvider } from './helpers/AuthProvider'
 
-createRoot(document.getElementById('root')).render(<AuthProvider><App /></AuthProvider>);
+// createRoot(document.getElementById('root')).render(<AuthProvider><App /></AuthProvider>);
+createRoot(document.getElementById('root')).render(<App />);

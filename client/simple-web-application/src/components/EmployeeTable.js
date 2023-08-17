@@ -2,9 +2,24 @@ import React, { useState } from 'react'
 import EmployeeModal from './EmployeeModal';
 import { formatDate, getSkill, getSkillDescription } from '../helpers/AssistingFunctions'
 import AxiosRequests from '../api/axios';
+import AlertMessage from '../components/AlertMessage';
+import { useNavigate } from 'react-router-dom';
 
+const EmployeeTable = ({ data, setData, skillLevels }) => {
+    const navigate = useNavigate();
+      // ----------- Alert Message -----------
+  const [alertState, setAlertState] = useState({
+    show: false,
+    message: '',
+    variant: '',
+    statusCode: ''
+  })
 
-const EmployeeTable = ({ data, setData, skillLevels, setAlertState }) => {
+  const handleCloseAlert = () => {
+    setAlertState({ show: false });
+  };
+  // -------------------------------------
+
 
     // --------------Add Modal--------------
     const [showAddModal, setShowAddModal] = useState(false);
@@ -47,6 +62,7 @@ const EmployeeTable = ({ data, setData, skillLevels, setAlertState }) => {
             })
             .catch(function (err) {
                 setAlertState({ variant: 'danger', show: true, message: err.response.data.message, statusCode: err.response.request.status })
+                // navigate('/');
             })
     }
 
@@ -54,7 +70,7 @@ const EmployeeTable = ({ data, setData, skillLevels, setAlertState }) => {
         <section>
             <div className="d-flex justify-content-start mb-2">
                 <button type="button" className="btn btn-success" onClick={handleShowAddModal}>Add Employee +</button>
-                <EmployeeModal showModal={showAddModal} handleClose={handleCloseAddModal} setAlertState={setAlertState} employee={null} title={"Add Employee"} onAddEmployee={handleAddEmployee} skillLevels={skillLevels} />
+                <EmployeeModal showModal={showAddModal} handleClose={handleCloseAddModal} setAlertState={setAlertState} title={"Add Employee"} onAddEmployee={handleAddEmployee} skillLevels={skillLevels} />
             </div>
             <div className="table-responsive">
                 <table className="table table-hover" >
@@ -97,6 +113,10 @@ const EmployeeTable = ({ data, setData, skillLevels, setAlertState }) => {
                         })}
                     </tbody>
                 </table>
+
+                <div className="d-flex justify-content-start">
+                    <AlertMessage show={alertState.show} message={alertState.message} variant={alertState.variant} statusCode={alertState.statusCode} onClose={handleCloseAlert} />
+                </div>
             </div>
         </section>
     )
