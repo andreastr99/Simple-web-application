@@ -5,17 +5,11 @@
 .btn-login {
   background-color: #3e4684;
   color: white; 
-  /* display: inline-block; */
-  /* outline: none; */
-  /* font-size: 14px; */
   border-radius: 30px;
   border: 1px solid transparent;
   letter-spacing: 2px;
-  /* min-width: 160px; */
   text-transform: uppercase;
   font-weight: 700;
-  /* text-align: center; */
-  /* height: 48px; */
   padding: 12px;
 }
 
@@ -59,33 +53,6 @@
 .table td {
   padding: 0.8rem;
 }
-
-/* .label{
-  border-radius: 3px;
-  padding: 0.3rem;
-  color: white;
-}
-
-.label-active{
-  background-color: green;
-}
-
-.label-inactive{
-  background-color: #e10d05;
-}
-
-.actions{
-  display: flex;
-  justify-content: space-around;
-}
-
-.actions svg{
-  cursor: pointer;
-}
-
-.delete-btn{
-  color: #e10d05;
-} */
 
 .custom-right-padding{
   padding-right: 20px;
