@@ -69,7 +69,7 @@ const EmployeeTable = ({ data, setData, skillLevels }) => {
     return (
         <section>
             <div className="d-flex justify-content-start mb-2">
-                <button type="button" className="btn btn-success" onClick={handleShowAddModal}>Add Employee +</button>
+                <button type="button" className="btn btn-success" onClick={handleShowAddModal}>Add Employee</button>
                 <EmployeeModal showModal={showAddModal} handleClose={handleCloseAddModal} setAlertState={setAlertState} title={"Add Employee"} onAddEmployee={handleAddEmployee} skillLevels={skillLevels} />
             </div>
             <div className="table-responsive">

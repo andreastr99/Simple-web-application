@@ -19,7 +19,7 @@ const AlertMessage = ({ show, message, variant, statusCode, onClose }) => {
   }, [show, variant, onClose]);
 
   return (
-    <div className="d-flex justify-content-start">
+    <div className="d-flex justify-content-start" style={{position: "absolute"}}>
       {show && (
         <Alert variant={variant}>
           {message ? message : 'Unauthorized'}
